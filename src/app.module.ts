@@ -6,6 +6,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import databaseConfig from './config/database/database.config';
 import appConfig from './config/app.config';
 import environmentValidator from './config/validator/environment.validator';
+import { UsersModule } from './users/users.module';
 
 const ENV = process.env.NODE_ENV;
 
@@ -31,6 +32,7 @@ const ENV = process.env.NODE_ENV;
         synchronize: configService.get('database.synchronize'),
       }),
     }),
+    UsersModule,
   ],
   controllers: [AppController],
   providers: [AppService],
