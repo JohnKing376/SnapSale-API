@@ -1,4 +1,4 @@
-import { Entity, Column, PrimaryGeneratedColumn, BeforeInsert } from 'typeorm';
+import { Entity, Column, BeforeInsert } from 'typeorm';
 import { DateTime } from 'luxon';
 import { createId } from '@paralleldrive/cuid2';
 
@@ -11,7 +11,7 @@ export class AbstractModel {
   identifier: string;
 
   @Column({
-    type: 'timestamp'
+    type: 'timestamp',
   })
   createdAt: DateTime;
 
@@ -21,8 +21,7 @@ export class AbstractModel {
   updatedAt: DateTime;
 
   @BeforeInsert()
-  public static async generateIdentifier(model: AbstractModel) {
-    model.identifier = createId()
+  public static generateIdentifier(model: AbstractModel) {
+    model.identifier = createId();
   }
-
 }
