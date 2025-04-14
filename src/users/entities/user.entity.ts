@@ -29,7 +29,7 @@ export default class User extends AbstractModel {
   @Column({
     type: 'varchar',
     nullable: false,
-    length: 11,
+    length: 14,
   })
   mobileNumber: string;
 
@@ -58,14 +58,12 @@ export default class User extends AbstractModel {
 
   @Column({
     type: 'varchar',
-    length: 255,
     nullable: true,
   })
   profileImg?: string
 
   @Column({
     type: 'varchar',
-    length: 255,
     nullable: true,
   })
   googleId?: string

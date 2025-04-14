@@ -1,0 +1,12 @@
+POST http://localhost:3000/users
+Content-Type: application/json
+
+
+{
+  "firstName": "John",
+  "lastName": "King",
+  "email": "johnking@gmail.com",
+  "mobileNumber": "+2349049125467",
+  "password": "Testing193!",
+  "role": "merchant"
+}

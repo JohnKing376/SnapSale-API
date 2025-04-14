@@ -12,16 +12,18 @@ export class AbstractModel {
 
   @Column({
     type: 'timestamp',
+    nullable: true,
   })
   createdAt: DateTime;
 
   @Column({
     type: 'timestamp',
+    nullable: true,
   })
   updatedAt: DateTime;
 
   @BeforeInsert()
-  public static generateIdentifier(model: AbstractModel) {
-    model.identifier = createId();
+  generateIdentifier() {
+    this.identifier = createId();
   }
 }
