@@ -6,7 +6,6 @@ import {
 import { InjectRepository } from '@nestjs/typeorm';
 import User from '../entities/user.entity';
 import { Repository } from 'typeorm';
-import { CreateUserDto } from '../dtos/create-user.dto';
 import { DateTime } from 'luxon';
 import { CreateUserOptions } from '../interfaces/create-user.interface';
 
