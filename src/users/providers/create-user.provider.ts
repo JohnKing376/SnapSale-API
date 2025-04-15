@@ -46,7 +46,7 @@ export class CreateUserProvider {
         description: JSON.stringify(
           `CreateUserProviderError.${CreateUserProviderError}`,
           null,
-          5,
+          2,
         ),
       });
     }
