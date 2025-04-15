@@ -8,21 +8,25 @@ import {
   IsString,
   Matches,
   MaxLength,
+  MinLength,
 } from 'class-validator';
 
 export class CreateUserDto {
   @IsNotEmpty()
   @IsString()
+  @MinLength(4)
   @MaxLength(20)
   firstName: string;
 
   @IsNotEmpty()
   @IsString()
+  @MinLength(4)
   @MaxLength(40)
   lastName: string;
 
   @IsMobilePhone('en-NG', { strictMode: true })
   @IsNotEmpty()
+  @MinLength(14)
   mobileNumber: string;
 
   @IsEmail()

@@ -8,6 +8,7 @@ import User from '../entities/user.entity';
 import { Repository } from 'typeorm';
 import { CreateUserDto } from '../dtos/create-user.dto';
 import { DateTime } from 'luxon';
+import { CreateUserOptions } from '../interfaces/create-user.interface';
 
 @Injectable()
 export class CreateUserProvider {
@@ -19,20 +20,20 @@ export class CreateUserProvider {
     private readonly userRepository: Repository<User>,
   ) {}
 
-  public async createUser(createUserDto: CreateUserDto): Promise<User> {
-    try {
-      const user = await this.userRepository.findOneBy({
-        email: createUserDto.email,
+  public async createUser(createUserOptions: CreateUserOptions): Promise<User> {
+    const user = await this.userRepository.findOneBy({
+      email: createUserOptions.email,
+    });
+
+    if (user) {
+      throw new BadRequestException('Bad Request', {
+        description: 'user already exists',
       });
+    }
 
-      if (user) {
-        throw new BadRequestException('Bad Request', {
-          description: 'user already exists',
-        });
-      }
-
+    try {
       const newUser = this.userRepository.create({
-        ...createUserDto,
+        ...createUserOptions,
         createdAt: DateTime.now(),
       });
 
@@ -42,11 +43,10 @@ export class CreateUserProvider {
     } catch (CreateUserProviderError) {
       console.log(CreateUserProviderError);
       throw new InternalServerErrorException('Internal Server Error', {
-        cause: CreateUserProviderError,
         description: JSON.stringify(
-          `createUserProviderError ---> ${CreateUserProviderError}`,
+          `CreateUserProviderError.${CreateUserProviderError}`,
           null,
-          2,
+          5,
         ),
       });
     }
