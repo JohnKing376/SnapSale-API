@@ -1,16 +1,15 @@
-import {AbstractModel} from 'src/common/models/abstract-model.entity';
+import { AbstractModel } from 'src/common/models/abstract-model.entity';
 import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
 import { UserRole } from '../enums/user-role.enum';
 
 @Entity({
-  name: 'users'
+  name: 'users',
 })
 export default class User extends AbstractModel {
   @PrimaryGeneratedColumn({
     type: 'int',
   })
   id: number;
-
 
   @Column({
     type: 'varchar',
@@ -44,15 +43,15 @@ export default class User extends AbstractModel {
   @Column({
     type: 'varchar',
     length: 255,
-    nullable: false,  
+    nullable: false,
   })
-  password: string
+  password: string;
 
   @Column({
     type: 'enum',
     nullable: false,
     enum: UserRole,
-    default: UserRole.CUSTOMER
+    default: UserRole.CUSTOMER,
   })
   role: UserRole;
 
@@ -60,11 +59,11 @@ export default class User extends AbstractModel {
     type: 'varchar',
     nullable: true,
   })
-  profileImg?: string
+  profileImg?: string;
 
   @Column({
     type: 'varchar',
     nullable: true,
   })
-  googleId?: string
+  googleId?: string;
 }

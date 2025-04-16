@@ -1,5 +1,7 @@
 import {
   BadRequestException,
+  forwardRef,
+  Inject,
   Injectable,
   InternalServerErrorException,
 } from '@nestjs/common';
@@ -8,6 +10,7 @@ import User from '../entities/user.entity';
 import { Repository } from 'typeorm';
 import { DateTime } from 'luxon';
 import { CreateUserOptions } from '../interfaces/create-user.interface';
+import { HashingProvider } from '../../auth/providers/hashing.provider';
 
 @Injectable()
 export class CreateUserProvider {
@@ -17,6 +20,12 @@ export class CreateUserProvider {
      */
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
+
+    /**
+     * Import Hashing Provider
+     */
+    // @Inject(forwardRef(() => HashingProvider))
+    private readonly hashingProvider: HashingProvider,
   ) {}
 
   public async createUser(createUserOptions: CreateUserOptions): Promise<User> {
@@ -30,9 +39,14 @@ export class CreateUserProvider {
       });
     }
 
+    const hashPassword = await this.hashingProvider.hashPassword(
+      createUserOptions.password,
+    );
+
     try {
       const newUser = this.userRepository.create({
         ...createUserOptions,
+        password: hashPassword,
         createdAt: DateTime.now(),
       });
 
