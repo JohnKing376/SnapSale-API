@@ -7,6 +7,9 @@ import databaseConfig from './config/database/database.config';
 import appConfig from './config/app.config';
 import environmentValidator from './config/validator/environment.validator';
 import { UsersModule } from './users/users.module';
+import { AuthModule } from './auth/auth.module';
+import jwtConfig from './auth/config/jwt.config';
+import { JwtModule } from '@nestjs/jwt';
 
 const ENV = process.env.NODE_ENV;
 
@@ -18,6 +21,8 @@ const ENV = process.env.NODE_ENV;
       envFilePath: !ENV ? `.env` : `.env.${ENV}`,
       validationSchema: environmentValidator,
     }),
+    ConfigModule.forFeature(jwtConfig),
+    JwtModule.registerAsync(jwtConfig.asProvider()),
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
@@ -33,6 +38,7 @@ const ENV = process.env.NODE_ENV;
       }),
     }),
     UsersModule,
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService],
