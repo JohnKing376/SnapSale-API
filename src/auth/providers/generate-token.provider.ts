@@ -38,13 +38,24 @@ export class GenerateTokenProvider {
     );
   }
 
-  public async generateTokens(user: User): Promise<string> {
-    return await this.signIn<Partial<GetUserData>>(
+  public async generateTokens(
+    user: User,
+  ): Promise<{ accessTokens: string; refreshTokens: string }> {
+    const accessTokens = await this.signIn<Partial<GetUserData>>(
       user.id,
       this.jwtConfiguration.accessTokenTTl,
       {
         email: user.email,
       },
     );
+    const refreshTokens = await this.signIn<Pick<GetUserData, 'sub'>>(
+      user.id,
+      this.jwtConfiguration.refreshTokenTTL,
+    );
+
+    return {
+      accessTokens,
+      refreshTokens,
+    };
   }
 }

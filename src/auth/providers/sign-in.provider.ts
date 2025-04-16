@@ -42,8 +42,8 @@ export class SignInProvider {
       throw new HttpException('Invalid Credentials', HttpStatus.BAD_REQUEST);
     }
 
-    const accessToken = await this.generateTokenProvider.generateTokens(user!);
+    const tokens = await this.generateTokenProvider.generateTokens(user!);
 
-    return { user, accessToken };
+    return { user, tokens };
   }
 }
