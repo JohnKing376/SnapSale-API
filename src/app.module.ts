@@ -10,6 +10,9 @@ import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
 import jwtConfig from './auth/config/jwt.config';
 import { JwtModule } from '@nestjs/jwt';
+import { APP_GUARD } from '@nestjs/core';
+import { AuthenticationGuard } from './auth/guards/authentication/authentication.guard';
+import { AuthTypeGuard } from './auth/guards/authentication/auth-type.guard';
 
 const ENV = process.env.NODE_ENV;
 
@@ -41,6 +44,13 @@ const ENV = process.env.NODE_ENV;
     AuthModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [
+    AppService,
+    {
+      provide: APP_GUARD,
+      useClass: AuthTypeGuard,
+    },
+    AuthenticationGuard,
+  ],
 })
 export class AppModule {}
