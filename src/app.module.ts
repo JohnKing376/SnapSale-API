@@ -13,6 +13,8 @@ import { JwtModule } from '@nestjs/jwt';
 import { APP_GUARD } from '@nestjs/core';
 import { AuthenticationGuard } from './auth/guards/authentication/authentication.guard';
 import { AuthTypeGuard } from './auth/guards/authentication/auth-type.guard';
+import { ProductsModule } from './products/products.module';
+import { SnakeNamingStrategy } from 'typeorm-naming-strategies';
 
 const ENV = process.env.NODE_ENV;
 
@@ -38,10 +40,16 @@ const ENV = process.env.NODE_ENV;
         password: configService.get('database.password'),
         autoLoadEntities: configService.get('database.autoLoadEntities'),
         synchronize: configService.get('database.synchronize'),
+        entities: [
+          'dist/**/*.entity{.ts,.js}',
+          'dist/**/entities/**/*.entity{.ts,.js}',
+        ],
+        namingStrategy: new SnakeNamingStrategy(),
       }),
     }),
     UsersModule,
     AuthModule,
+    ProductsModule,
   ],
   controllers: [AppController],
   providers: [
