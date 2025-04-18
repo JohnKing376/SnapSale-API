@@ -1,16 +1,12 @@
 import { AbstractModel } from 'src/common/models/abstract-model.entity';
-import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
 import { UserRole } from '../enums/user-role.enum';
+import { Product } from '../../products/entities/product.entity';
 
 @Entity({
   name: 'users',
 })
 export default class User extends AbstractModel {
-  @PrimaryGeneratedColumn({
-    type: 'int',
-  })
-  id: number;
-
   @Column({
     type: 'varchar',
     length: 20,
@@ -66,4 +62,7 @@ export default class User extends AbstractModel {
     nullable: true,
   })
   googleId?: string;
+
+  @OneToMany(() => Product, (product) => product.merchant)
+  products: Product[];
 }

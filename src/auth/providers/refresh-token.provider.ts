@@ -46,9 +46,9 @@ export class RefreshTokenProvider {
         issuer: this.jwtConfiguration.issuer,
       });
 
-      const user = await this.userService.findOneById(sub);
+      const user = await this.userService.findOneByIdentifier(sub);
 
-      return await this.generateTokenProvider.generateTokens(user);
+      return await this.generateTokenProvider.generateTokens(user!);
     } catch (generateRefreshTokenError) {
       throw new BadRequestException('Bad Request', {
         description: 'Invalid Token',

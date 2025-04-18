@@ -1,0 +1,14 @@
+POST http://localhost:3000/products
+Content-Type: application/json
+Authorization: Bearer {{token}}}
+
+{
+  "name": "Amazon Forest",
+  "description": "A forest i can sell",
+  "price": 40000,
+  "quantity": 6,
+  "isAvailable": true,
+  "category": ["clothing"],
+  "condition": "used",
+  "region": "USA"
+}

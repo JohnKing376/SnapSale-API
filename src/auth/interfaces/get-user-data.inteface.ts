@@ -1,5 +1,5 @@
 export interface GetUserData {
-  sub: number;
+  sub: string;
 
   email: string;
 }

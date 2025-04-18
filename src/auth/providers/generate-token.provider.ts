@@ -20,13 +20,13 @@ export class GenerateTokenProvider {
     private readonly jwtConfiguration: ConfigType<typeof JwtConfig>,
   ) {}
   public async signIn<T>(
-    userId: number,
+    userIdentifier: string,
     expiresIn: number,
     payload?: T,
   ): Promise<string> {
     return this.jwtService.signAsync(
       {
-        sub: userId,
+        sub: userIdentifier,
         ...payload,
       },
       {
@@ -42,14 +42,14 @@ export class GenerateTokenProvider {
     user: User,
   ): Promise<{ accessTokens: string; refreshTokens: string }> {
     const accessTokens = await this.signIn<Partial<GetUserData>>(
-      user.id,
+      user.identifier,
       this.jwtConfiguration.accessTokenTTl,
       {
         email: user.email,
       },
     );
     const refreshTokens = await this.signIn<Pick<GetUserData, 'sub'>>(
-      user.id,
+      user.identifier,
       this.jwtConfiguration.refreshTokenTTL,
     );
 
