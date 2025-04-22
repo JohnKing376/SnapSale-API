@@ -117,7 +117,7 @@ export class ProductsService {
 
   //TODO: Test
   public async deleteProduct(identifier: string): Promise<string> {
-    const product = await this.findProductByIdentifier(identifier);
+    await this.findProductByIdentifier(identifier);
 
     await this.productRepository.delete({ identifier });
 
