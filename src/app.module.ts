@@ -15,6 +15,9 @@ import { AuthenticationGuard } from './auth/guards/authentication/authentication
 import { AuthTypeGuard } from './auth/guards/authentication/auth-type.guard';
 import { ProductsModule } from './products/products.module';
 import { SnakeNamingStrategy } from 'typeorm-naming-strategies';
+import { PaginationModule } from './common/pagination/pagination/pagination.module';
+import { Pagination } from './common/pagination/pagination';
+import { PaginationModule } from './common/pagination/pagination.module';
 
 const ENV = process.env.NODE_ENV;
 
@@ -50,6 +53,7 @@ const ENV = process.env.NODE_ENV;
     UsersModule,
     AuthModule,
     ProductsModule,
+    PaginationModule,
   ],
   controllers: [AppController],
   providers: [
@@ -59,6 +63,7 @@ const ENV = process.env.NODE_ENV;
       useClass: AuthTypeGuard,
     },
     AuthenticationGuard,
+    Pagination,
   ],
 })
 export class AppModule {}
