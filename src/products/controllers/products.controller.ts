@@ -1,4 +1,12 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Patch,
+  Post,
+} from '@nestjs/common';
 import { ProductsService } from '../providers/products.service';
 import { CreateProductDto } from '../dtos/create-product.dto';
 import { GetUser } from '../../auth/decorators/get-user.decorator';
@@ -20,6 +28,11 @@ export class ProductsController {
     @GetUser() user: GetUserData,
   ) {
     return await this.productsService.createProduct(user, createProductDto);
+  }
+
+  @Get('one-product/:identifier')
+  public async getProduct(@Param() identifier: string) {
+    return await this.productsService.findProductByIdentifier(identifier);
   }
 
   @Patch('update/:identifier')
