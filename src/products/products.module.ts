@@ -6,10 +6,11 @@ import { UsersModule } from '../users/users.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Product } from './entities/product.entity';
 import { UpdateProductProvider } from './providers/update-product.provider';
+import { PaginationModule } from '../common/pagination/pagination.module';
 
 @Module({
   providers: [ProductsService, CreateProductProvider, UpdateProductProvider],
   controllers: [ProductsController],
-  imports: [TypeOrmModule.forFeature([Product]), UsersModule],
+  imports: [TypeOrmModule.forFeature([Product]), UsersModule, PaginationModule],
 })
 export class ProductsModule {}

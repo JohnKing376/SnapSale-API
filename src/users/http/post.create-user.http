@@ -3,9 +3,9 @@ Content-Type: application/json
 
 
 {
-  "firstName": "John",
-  "lastName": "King",
-  "email": "johnking@gmail.com",
+  "firstName": "Benji",
+  "lastName": "OluBayoFi",
+  "email": "johnking1234@gmail.com",
   "mobileNumber": "+2349049125467",
   "password": "Testing193!",
   "role": "merchant"

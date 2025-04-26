@@ -7,6 +7,10 @@ import { GetUserData } from '../../auth/interfaces/get-user-data.inteface';
 import { CreateProductProvider } from './create-product.provider';
 import { UpdateProducts } from '../types/update-products.types';
 import { UpdateProductProvider } from './update-product.provider';
+import { PaginationProvider } from '../../common/pagination/providers/pagination.provider';
+import { Pagination } from '../../common/pagination/interfaces/pagination.interface';
+import { PaginateQuery } from '../interfaces/paginate-query.interface';
+import { UsersService } from '../../users/providers/users.service';
 
 @Injectable()
 export class ProductsService {
@@ -23,8 +27,15 @@ export class ProductsService {
     /**
      * Import Update Product Provider
      */
-
     private readonly updateProductProvider: UpdateProductProvider,
+    /**
+     * Import Pagination Provider
+     */
+    private readonly paginationProvider: PaginationProvider,
+    /**
+     * Import User Service
+     */
+    private readonly usersService: UsersService,
   ) {}
 
   /**
@@ -80,7 +91,6 @@ export class ProductsService {
     const product = await this.productRepository.findOneBy({
       id,
     });
-
     if (!product) {
       throw new NotFoundException('product with this id not found');
     }
@@ -122,5 +132,32 @@ export class ProductsService {
     await this.productRepository.delete({ identifier });
 
     return `Product with identifier ${identifier} was deleted successfully.`;
+  }
+
+  /**
+   * @description Method to get all products by its primary key
+   * @author John O.King
+   * @param paginateQueryOptions
+   * @param user
+   * @returns Promise<Pagination<Product>>
+   */
+  public async listProducts(
+    paginateQueryOptions: PaginateQuery,
+    user: GetUserData,
+  ): Promise<Pagination<Product>> {
+    //TODO: Maybe add error handling here
+    const auth_user = await this.usersService.findOneByIdentifier(user.sub);
+
+    return await this.paginationProvider.paginateQuery(
+      {
+        page: paginateQueryOptions.page,
+        limit: paginateQueryOptions.limit,
+      },
+      this.productRepository,
+      { merchantId: auth_user!.id },
+      {
+        merchant: true,
+      },
+    );
   }
 }
