@@ -41,6 +41,9 @@ export class Product extends AbstractModel {
   @Column('json', { nullable: true })
   productImages?: string[];
 
+  @Column()
+  merchantId: number;
+
   @ManyToOne(() => User, (user) => user.products)
   merchant: User;
 }

@@ -6,12 +6,16 @@ import {
   Param,
   Patch,
   Post,
+  Query,
 } from '@nestjs/common';
 import { ProductsService } from '../providers/products.service';
 import { CreateProductDto } from '../dtos/create-product.dto';
 import { GetUser } from '../../auth/decorators/get-user.decorator';
 import { GetUserData } from '../../auth/interfaces/get-user-data.inteface';
 import { UpdateProductDto } from '../dtos/update-product.dto';
+import { PaginationQueryDto } from '../../common/pagination/dtos/pagination-query.dto';
+import { Auth } from '../../auth/decorators/auth.decorator';
+import { AuthType } from '../../auth/enums/auth-type.enums';
 
 @Controller('products')
 export class ProductsController {
@@ -33,6 +37,12 @@ export class ProductsController {
   @Get('one-product/:identifier')
   public async getProduct(@Param() identifier: string) {
     return await this.productsService.findProductByIdentifier(identifier);
+  }
+
+  @Auth(AuthType.BEARER)
+  @Get('list-products')
+  public async listProducts(@Query() productQuery: PaginationQueryDto, @GetUser() user: GetUserData) {
+    return await this.productsService.listProducts(productQuery, user);
   }
 
   @Patch('update/:identifier')
