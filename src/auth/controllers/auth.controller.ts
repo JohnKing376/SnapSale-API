@@ -1,4 +1,12 @@
-import { Body, Controller, HttpCode, HttpStatus, Post } from '@nestjs/common';
+import {
+  Body,
+  ClassSerializerInterceptor,
+  Controller,
+  HttpCode,
+  HttpStatus,
+  Post,
+  UseInterceptors,
+} from '@nestjs/common';
 import { AuthService } from '../providers/auth.service';
 import { SignInUserDto } from '../dtos/sign-in-user.dto';
 import { RefreshTokenDto } from '../dtos/refresh-token-dto';
@@ -6,6 +14,7 @@ import { Auth } from '../decorators/auth.decorator';
 import { AuthType } from '../enums/auth-type.enums';
 
 @Controller('auth')
+@UseInterceptors(ClassSerializerInterceptor)
 export class AuthController {
   constructor(
     /**

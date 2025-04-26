@@ -1,5 +1,6 @@
 import {
   Body,
+  ClassSerializerInterceptor,
   Controller,
   Delete,
   Get,
@@ -7,6 +8,7 @@ import {
   Patch,
   Post,
   Query,
+  UseInterceptors,
 } from '@nestjs/common';
 import { ProductsService } from '../providers/products.service';
 import { CreateProductDto } from '../dtos/create-product.dto';
@@ -18,6 +20,7 @@ import { Auth } from '../../auth/decorators/auth.decorator';
 import { AuthType } from '../../auth/enums/auth-type.enums';
 
 @Controller('products')
+@UseInterceptors(ClassSerializerInterceptor)
 export class ProductsController {
   constructor(
     /**
@@ -41,7 +44,10 @@ export class ProductsController {
 
   @Auth(AuthType.BEARER)
   @Get('list-products')
-  public async listProducts(@Query() productQuery: PaginationQueryDto, @GetUser() user: GetUserData) {
+  public async listProducts(
+    @Query() productQuery: PaginationQueryDto,
+    @GetUser() user: GetUserData,
+  ) {
     return await this.productsService.listProducts(productQuery, user);
   }
 
