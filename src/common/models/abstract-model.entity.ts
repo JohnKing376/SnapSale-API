@@ -1,17 +1,19 @@
 import { Column, BeforeInsert, PrimaryGeneratedColumn } from 'typeorm';
-import { DateTime } from 'luxon';
 import { createId } from '@paralleldrive/cuid2';
+import { Exclude } from 'class-transformer';
 
-const dateTransformer = {
-  to(value: Date | null): Date | null {
-    return value;
-  },
-  from(value: Date | null): string | null {
-    return value ? DateTime.fromJSDate(value).setZone('utc').toISO() : null;
-  },
-};
+// // TODO: Fix Date
+// const dateTransformer = {
+//   to(value: Date | null): Date | null {
+//     return value;
+//   },
+//   from(value: Date | null): string | null {
+//     return value ? DateTime.fromJSDate(value).setZone('utc').toISO() : null;
+//   },
+// };
 
 export abstract class AbstractModel {
+  @Exclude()
   @PrimaryGeneratedColumn('increment')
   declare id: number;
 
@@ -24,14 +26,14 @@ export abstract class AbstractModel {
   @Column({
     type: 'timestamp',
     nullable: true,
-    transformer: dateTransformer,
+    // transformer: dateTransformer,
   })
   declare createdAt: Date;
 
   @Column({
     type: 'timestamp',
     nullable: true,
-    transformer: dateTransformer,
+    // transformer: dateTransformer,
   })
   declare updatedAt: Date;
 

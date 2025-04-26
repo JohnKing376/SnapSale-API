@@ -1,14 +1,11 @@
 import {
   BadRequestException,
-  forwardRef,
-  Inject,
   Injectable,
   InternalServerErrorException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import User from '../entities/user.entity';
 import { Repository } from 'typeorm';
-import { DateTime } from 'luxon';
 import { CreateUserOptions } from '../interfaces/create-user.interface';
 import { HashingProvider } from '../../auth/providers/hashing.provider';
 
@@ -47,7 +44,7 @@ export class CreateUserProvider {
       const newUser = this.userRepository.create({
         ...createUserOptions,
         password: hashPassword,
-        createdAt: DateTime.now(),
+        createdAt: new Date(),
       });
 
       await this.userRepository.save(newUser);
