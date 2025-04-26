@@ -1,7 +1,8 @@
 import { AbstractModel } from 'src/common/models/abstract-model.entity';
-import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
+import { Entity, Column, OneToMany, BeforeInsert } from 'typeorm';
 import { UserRole } from '../enums/user-role.enum';
 import { Product } from '../../products/entities/product.entity';
+import { Exclude } from 'class-transformer';
 
 @Entity({
   name: 'users',
@@ -36,6 +37,7 @@ export default class User extends AbstractModel {
   })
   email: string;
 
+  @Exclude()
   @Column({
     type: 'varchar',
     length: 255,
@@ -65,4 +67,14 @@ export default class User extends AbstractModel {
 
   @OneToMany(() => Product, (product) => product.merchant)
   products: Product[];
+
+  @Column({
+    nullable: true,
+  })
+  fullName: string;
+
+  @BeforeInsert()
+  generateFullName() {
+    this.fullName = this.lastName + ' ' + this.firstName;
+  }
 }

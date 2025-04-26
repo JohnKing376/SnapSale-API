@@ -31,6 +31,8 @@ export class CreateProductProvider {
   ): Promise<Product> {
     const merchantId = await this.usersService.findOneByIdentifier(user.sub);
 
+    console.log(user.sub);
+
     if (!merchantId) {
       throw new NotFoundException('user not found');
     }
