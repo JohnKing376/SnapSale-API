@@ -10,6 +10,7 @@ import { JwtService } from '@nestjs/jwt';
 import { ConfigType } from '@nestjs/config';
 import jwtConfig from '../../config/jwt.config';
 import { REQUEST_USER_KEY } from '../../constants/auth.constants';
+import ActiveUser from '../../interfaces/request-active-user.interface';
 
 @Injectable()
 export class AuthenticationGuard implements CanActivate {
@@ -26,13 +27,12 @@ export class AuthenticationGuard implements CanActivate {
     private readonly jwtConfigurations: ConfigType<typeof jwtConfig>,
   ) {}
   async canActivate(context: ExecutionContext): Promise<boolean> {
-    const request = context.switchToHttp().getRequest<Request>();
+    const request = context.switchToHttp().getRequest<ActiveUser>();
     const token = this.extractTokenFromHeader(request);
     if (!token) {
       throw new UnauthorizedException();
     }
     try {
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
       request[REQUEST_USER_KEY] = await this.jwtService.verifyAsync(token, {
         audience: this.jwtConfigurations.audience,
         issuer: this.jwtConfigurations.issuer,
