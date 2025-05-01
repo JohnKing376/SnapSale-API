@@ -1,10 +1,11 @@
-import { UserRole } from '../enums/user-role.enum';
+// import { UserRole } from '../enums/user-role.enum';
+import { RoleType } from '../../auth/enums/role-type.enums';
 
 export interface CreateUserOptions {
   firstName: string;
   lastName: string;
   mobileNumber: string;
-  role: UserRole;
+  role: RoleType;
   email: string;
   password: string;
   googleId?: string;
