@@ -46,6 +46,7 @@ export class GenerateTokenProvider {
       this.jwtConfiguration.accessTokenTTl,
       {
         email: user.email,
+        role: user.role,
       },
     );
     const refreshTokens = await this.signIn<Pick<GetUserData, 'sub'>>(
