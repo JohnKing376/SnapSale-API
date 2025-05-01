@@ -1,8 +1,8 @@
 import { AbstractModel } from 'src/common/models/abstract-model.entity';
 import { Entity, Column, OneToMany, BeforeInsert } from 'typeorm';
-import { UserRole } from '../enums/user-role.enum';
 import { Product } from '../../products/entities/product.entity';
 import { Exclude } from 'class-transformer';
+import { RoleType } from '../../auth/enums/role-type.enums';
 
 @Entity({
   name: 'users',
@@ -48,10 +48,10 @@ export default class User extends AbstractModel {
   @Column({
     type: 'enum',
     nullable: false,
-    enum: UserRole,
-    default: UserRole.CUSTOMER,
+    enum: RoleType,
+    default: RoleType.CUSTOMER,
   })
-  role: UserRole;
+  role: RoleType;
 
   @Column({
     type: 'varchar',

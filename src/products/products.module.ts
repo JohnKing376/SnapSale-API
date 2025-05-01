@@ -7,9 +7,19 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { Product } from './entities/product.entity';
 import { UpdateProductProvider } from './providers/update-product.provider';
 import { PaginationModule } from '../common/pagination/pagination.module';
+import { APP_GUARD } from '@nestjs/core';
+import { RoleTypeGuard } from '../auth/guards/authentication/role-type.guard';
 
 @Module({
-  providers: [ProductsService, CreateProductProvider, UpdateProductProvider],
+  providers: [
+    ProductsService,
+    CreateProductProvider,
+    UpdateProductProvider,
+    {
+      provide: APP_GUARD,
+      useClass: RoleTypeGuard,
+    },
+  ],
   controllers: [ProductsController],
   imports: [TypeOrmModule.forFeature([Product]), UsersModule, PaginationModule],
 })
