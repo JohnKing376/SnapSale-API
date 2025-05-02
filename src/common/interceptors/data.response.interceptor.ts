@@ -8,6 +8,7 @@ import { map, Observable } from 'rxjs';
 import { Reflector } from '@nestjs/core';
 import { RESPONSE_META_KEY } from '../constants/response-meta.constants';
 import IResponseMeta from '../interfaces/response-meta.interface';
+import { IApiResponse } from '../interfaces/api-response.interface';
 
 @Injectable()
 export class DataResponseInterceptor<T>
