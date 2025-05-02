@@ -17,11 +17,14 @@ export class RoleTypeGuard implements CanActivate {
   private static readonly defaultRoleType = RoleType.ADMIN;
 
   canActivate(context: ExecutionContext): boolean {
-    const roleTypes: RoleType[] =
-      this.reflector.getAllAndOverride<RoleType[]>(ROLE_TYPE_KEY, [
-        context.getClass(),
-        context.getHandler(),
-      ]) ?? RoleTypeGuard.defaultRoleType;
+    const roleTypes: RoleType[] = this.reflector.getAllAndOverride<RoleType[]>(
+      ROLE_TYPE_KEY,
+      [context.getClass(), context.getHandler()],
+    );
+
+    if (!roleTypes) {
+      return true;
+    }
 
     const user = context.switchToHttp().getRequest<ActiveUser>().user;
 
