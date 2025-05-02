@@ -59,6 +59,7 @@ export default class User extends AbstractModel {
   })
   profileImg?: string;
 
+  @Exclude()
   @Column({
     type: 'varchar',
     nullable: true,
