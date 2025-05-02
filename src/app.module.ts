@@ -17,6 +17,7 @@ import { ProductsModule } from './products/products.module';
 import { SnakeNamingStrategy } from 'typeorm-naming-strategies';
 import { PaginationModule } from './common/pagination/pagination.module';
 import { DataResponseInterceptor } from './common/interceptors/data.response.interceptor';
+import { OtpTokenModule } from './otp-token/otp-token.module';
 
 const ENV = process.env.NODE_ENV;
 
@@ -53,6 +54,7 @@ const ENV = process.env.NODE_ENV;
     AuthModule,
     ProductsModule,
     PaginationModule,
+    OtpTokenModule,
   ],
   controllers: [AppController],
   providers: [
