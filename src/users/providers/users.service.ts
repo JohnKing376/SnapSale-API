@@ -28,7 +28,7 @@ export class UsersService {
     return await this.createUserProvider.createUser(createUserDto);
   }
 
-  public async findOneByEmail(email: string): Promise<User | null> {
+  public async findOneByEmail(email: string): Promise<User> {
     return await this.findUserByEmailProvider.findUserByEmail(email);
   }
 
