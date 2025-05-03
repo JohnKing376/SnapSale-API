@@ -1,10 +1,9 @@
 import { AbstractModel } from '../../common/models/abstract-model.entity';
-import { Column, Entity, OneToOne } from 'typeorm';
+import { Column, Entity, JoinColumn, OneToOne } from 'typeorm';
 import User from '../../users/entities/user.entity';
-import { JoinColumn } from 'typeorm/browser';
 
 @Entity({ name: 'otp_token' })
-export class OtpToken extends AbstractModel {
+export default class OtpToken extends AbstractModel {
   @Column({
     type: 'int',
     nullable: false,
@@ -13,6 +12,7 @@ export class OtpToken extends AbstractModel {
 
   @Column({
     type: 'boolean',
+    default: false,
   })
   isRevoked: boolean;
 
@@ -26,6 +26,7 @@ export class OtpToken extends AbstractModel {
 
   @Column({
     type: 'timestamp',
+    nullable: true,
   })
   expiresAt: Date;
 
