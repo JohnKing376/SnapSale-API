@@ -17,6 +17,8 @@ export class FindUserByEmailProvider {
     private readonly userRepository: Repository<User>,
   ) {}
 
+  //TODO: Maybe this is not needed.
+
   /**
    * @description Method to get a user by email
    * @author John O.King
@@ -24,7 +26,7 @@ export class FindUserByEmailProvider {
    * @return Promise<User | null>
    * @memberOf FindUserByEmailProvider
    */
-  public async findUserByEmail(email: string): Promise<User | null> {
+  public async findUserByEmail(email: string): Promise<User> {
     let user: User | null = null;
 
     try {
