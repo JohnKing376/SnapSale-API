@@ -18,4 +18,5 @@ export default Joi.object({
   MAIL_HOST: Joi.string().required(),
   MAIL_PASSWORD: Joi.string().required(),
   MAIL_USERNAME: Joi.string().required(),
+  BUSINESS_MAIL: Joi.string().required(),
 });
