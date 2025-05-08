@@ -1,0 +1,9 @@
+PATCH http://localhost:3000/products/update-products/mgmcy4chq5t2n0icxtrc5plk
+Content-Type: application/json
+Authorization: Bearer {{token}}}
+
+
+{
+  "name": "Amazonial Forest",
+  "description": "John_King"
+}
