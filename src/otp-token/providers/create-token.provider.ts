@@ -8,10 +8,10 @@ import { Repository } from 'typeorm';
 import OtpToken from '../entities/otp-token.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { GenerateOtpTokenProvider } from './generate-otp-token.provider';
-import AppConfig from '../../config/app.config';
-import appConfig from '../../config/app.config';
 import { ConfigType } from '@nestjs/config';
 import { ICreateToken } from '../interfaces/otp-token-interface';
+import AppConfig from '../../config/app.config';
+import appConfig from '../../config/app.config';
 
 @Injectable()
 export class CreateTokenProvider {
@@ -44,12 +44,10 @@ export class CreateTokenProvider {
         expiresAt: this.config.otp_token_ttl,
       });
 
-      await this.otpTokenRepository.save(newToken);
-
-      return newToken;
+      return await this.otpTokenRepository.save(newToken);
     } catch (error) {
       this.logger.error(
-        `[CREATE-TOKEN-PROVIDER]: ${JSON.stringify(error, null, 2)} `,
+        `[CREATE-TOKEN-PROVIDER-ERROR]: ----> ${JSON.stringify(error, null, 2)} `,
       );
       throw new InternalServerErrorException(
         'Something went wrong while creating the token',

@@ -34,13 +34,18 @@ export class SignInProvider {
 
     const user = await this.userService.findOneByEmail(email);
 
+    if (!user) {
+      this.logger.error('[INVALID-CREDENTIALS]');
+      throw new BadRequestException('Invalid Credentials');
+    }
+
     const passwordMatch = await this.hashingProvider.comparePassword(
       password,
       user.password,
     );
 
     if (!passwordMatch) {
-      this.logger.log('[INVALID-CREDENTIALS]');
+      this.logger.error('[INVALID-CREDENTIALS]');
       throw new BadRequestException('Invalid Credentials');
     }
 

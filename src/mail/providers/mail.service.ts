@@ -6,9 +6,9 @@ import {
   Logger,
 } from '@nestjs/common';
 import { ConfigType } from '@nestjs/config';
-import AppConfig from '../../config/app.config';
-import appConfig from '../../config/app.config';
 import { IEmailOptions } from '../interfaces/send-email.interface';
+import mailConfig from '../config/mail.config';
+import MailConfig from '../config/mail.config';
 
 @Injectable()
 export class MailService {
@@ -20,8 +20,8 @@ export class MailService {
     /**
      * Inject App Config
      */
-    @Inject(appConfig.KEY)
-    private readonly config: ConfigType<typeof AppConfig>,
+    @Inject(mailConfig.KEY)
+    private readonly config: ConfigType<typeof MailConfig>,
   ) {}
 
   private logger = new Logger('MailService');
@@ -53,9 +53,9 @@ export class MailService {
         },
         attachments: emailAttachments.length > 0 ? emailAttachments : undefined,
       });
-      this.logger.log('[MAIL-SERVICE]: SUCCESSFULLY SENT MAIL');
+      this.logger.log('SUCCESSFULLY SENT MAIL');
     } catch (sendMailError) {
-      this.logger.error(`[MAIL-SERVICE]: FAILED TO SEND MAIL`);
+      this.logger.error(`FAILED TO SEND MAIL`);
       this.logger.error(`[MAIL-SERVICE-ERROR]: ${sendMailError}]`);
       throw new InternalServerErrorException(
         'Something went wrong while trying to send mail',

@@ -34,6 +34,10 @@ export class VerifyTokenProvider {
 
     const user = await this.usersService.findOneByEmail(email);
 
+    if (!user) {
+      throw new NotFoundException('user not found');
+    }
+
     const otpToken = await this.otpTokenRepository.findOne({
       where: { id: user.id },
     });
@@ -53,8 +57,12 @@ export class VerifyTokenProvider {
       try {
         await this.otpTokenRepository.update(otpToken.id, { isUsed: true });
       } catch (error) {
-        this.logger.log(`[VERIFY-TOKEN-PROVIDER]: ${error}`);
-        throw new InternalServerErrorException('Error updating token');
+        this.logger.log(
+          `[VERIFY-TOKEN-PROVIDER-ERROR]: -----> ${JSON.stringify(error, null, 2)}`,
+        );
+        throw new InternalServerErrorException(
+          'Something went wrong. Try again later',
+        );
       }
     }
 
