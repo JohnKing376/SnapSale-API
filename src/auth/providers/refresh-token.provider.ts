@@ -4,6 +4,7 @@ import {
   Inject,
   Injectable,
   Logger,
+  NotFoundException,
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import jwtConfig from '../config/jwt.config';
@@ -39,25 +40,21 @@ export class RefreshTokenProvider {
   ) {}
 
   public async generateRefreshToken(refreshTokenDto: RefreshTokenDto) {
-    try {
-      const { sub } = await this.jwtService.verifyAsync<
-        Pick<GetUserData, 'sub'>
-      >(refreshTokenDto.refreshToken, {
+    const { sub } = await this.jwtService.verifyAsync<Pick<GetUserData, 'sub'>>(
+      refreshTokenDto.refreshToken,
+      {
         audience: this.jwtConfiguration.audience,
         secret: this.jwtConfiguration.secret,
         issuer: this.jwtConfiguration.issuer,
-      });
+      },
+    );
 
-      const user = await this.userService.findUserByIdentifier(sub);
+    const user = await this.userService.findUserByIdentifier(sub);
 
-      return await this.generateTokenProvider.generateTokens(user);
-    } catch (generateRefreshTokenError) {
-      this.logger.error(
-        `[GENERATE-TOKEN-PROVIDER-ERROR]:, ${generateRefreshTokenError}`,
-      );
-      throw new BadRequestException('Bad Request', {
-        description: 'Invalid Token',
-      });
+    if (!user) {
+      throw new NotFoundException('user not found');
     }
+
+    return await this.generateTokenProvider.generateTokens(user);
   }
 }

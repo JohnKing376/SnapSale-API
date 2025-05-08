@@ -10,9 +10,7 @@ import { Repository } from 'typeorm';
 import { CreateUserOptions } from '../interfaces/create-user.interface';
 import { HashingProvider } from '../../auth/providers/hashing.provider';
 import { MailService } from '../../mail/providers/mail.service';
-import { EmailType } from '../../mail/enums/mail-type.enums';
 import { OtpTokenService } from '../../otp-token/providers/otp-token.service';
-import { OtpTokenType } from '../../otp-token/enums/otp-token-type.enums';
 
 @Injectable()
 export class CreateUserProvider {
@@ -27,7 +25,6 @@ export class CreateUserProvider {
     /**
      * Import Hashing Provider
      */
-    // @Inject(forwardRef(() => HashingProvider))
     private readonly hashingProvider: HashingProvider,
 
     private readonly mailService: MailService,
@@ -54,38 +51,37 @@ export class CreateUserProvider {
       const newUser = this.userRepository.create({
         ...createUserOptions,
         password: hashPassword,
-        createdAt: Date.now(),
+        createdAt: new Date(Date.now()).toISOString(),
       });
-
-      await this.userRepository.save(newUser);
 
       /*******************************/
       /*For Testing Purposes*/
-
-      await this.otpTokenService.createToken({
-        purpose: OtpTokenType.EMAIL_VERIFICATION,
-        userId: newUser.id,
-      });
+      //
+      // await this.otpTokenService.createToken({
+      //   purpose: OtpTokenType.EMAIL_VERIFICATION,
+      //   userId: newUser.id,
+      // });
       /*******************************/
 
       /*******************************/
-      /*For Testing Purposes*/
-      await this.mailService.sendMail({
-        receiversName: newUser.fullName,
-        emailTemplate: EmailType.WELCOME_EMAIL,
-        receiversEmail: newUser.email,
-        emailSubject: 'WELCOME_EMAIL',
-      });
+      // /*For Testing Purposes*/
+      // await this.mailService.sendMail({
+      //   receiversName: newUser.fullName,
+      //   emailTemplate: EmailType.WELCOME_EMAIL,
+      //   receiversEmail: newUser.email,
+      //   emailSubject: 'WELCOME_EMAIL',
+      // });
       /*******************************/
 
-      return newUser;
+      return await this.userRepository.save(newUser);
     } catch (CreateUserProviderError) {
-      this.logger.log(
-        `[CREATE-USER-PROVIDER-ERROR]: ${CreateUserProviderError}`,
+      this.logger.error(
+        `[CREATE-USER-PROVIDER-ERROR]: ----->
+         ${JSON.stringify(CreateUserProviderError, null, 5)}`,
       );
-      throw new InternalServerErrorException('Internal Server Error', {
-        description: 'Error creating user',
-      });
+      throw new InternalServerErrorException(
+        'Something went wrong while trying to create the user. Please try again later',
+      );
     }
   }
 }

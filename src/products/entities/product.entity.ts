@@ -42,7 +42,7 @@ export class Product extends AbstractModel {
   productImages?: string[];
 
   @Column()
-  merchantId: number;
+  merchantId: number | null;
 
   @ManyToOne(() => User, (user) => user.products)
   merchant: User;

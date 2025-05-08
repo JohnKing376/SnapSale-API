@@ -5,10 +5,8 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { CreateUserProvider } from './providers/create-user.provider';
 import User from './entities/user.entity';
 import { AuthModule } from '../auth/auth.module';
-import { FindUserByEmailProvider } from './providers/find-user-by-email.provider';
+
 import { OtpTokenModule } from '../otp-token/otp-token.module';
-import { FindUserByIdentifierProvider } from './providers/find-user-by-identifier.provider';
-import { FindUserByIdProvider } from './providers/find-user-by-id.provider';
 
 @Module({
   imports: [
@@ -16,13 +14,7 @@ import { FindUserByIdProvider } from './providers/find-user-by-id.provider';
     forwardRef(() => AuthModule),
     forwardRef(() => OtpTokenModule),
   ],
-  providers: [
-    UsersService,
-    CreateUserProvider,
-    FindUserByEmailProvider,
-    FindUserByIdentifierProvider,
-    FindUserByIdProvider,
-  ],
+  providers: [UsersService, CreateUserProvider],
   controllers: [UsersController],
   exports: [UsersService],
 })

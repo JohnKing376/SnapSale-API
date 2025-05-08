@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { Product } from '../entities/product.entity';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -11,8 +11,6 @@ import { PaginationProvider } from '../../common/pagination/providers/pagination
 import { Pagination } from '../../common/pagination/interfaces/pagination.interface';
 import { PaginateQuery } from '../interfaces/paginate-query.interface';
 import { UsersService } from '../../users/providers/users.service';
-import { FindProductByIdProvider } from './find-product-by-id.provider';
-import { FindProductByIdentifierProvider } from './find-product-by-identifier.provider';
 
 @Injectable()
 export class ProductsService {
@@ -38,14 +36,6 @@ export class ProductsService {
      * Import User Service
      */
     private readonly usersService: UsersService,
-    /**
-     * Import Find Product By ID Provider
-     */
-    private readonly findProductByIdProvider: FindProductByIdProvider,
-    /**
-     * Import Find Product By Identifier Provider
-     */
-    private readonly findProductByIdentifierProvider: FindProductByIdentifierProvider,
   ) {}
 
   /**
@@ -75,10 +65,12 @@ export class ProductsService {
    * @returns Promise<Product>
    * @memberOf ProductsService
    */
-  public async findProductByIdentifier(identifier: string): Promise<Product> {
-    return await this.findProductByIdentifierProvider.findOneByIdentifier(
+  public async findProductByIdentifier(
+    identifier: string,
+  ): Promise<Product | null> {
+    return await this.productRepository.findOneBy({
       identifier,
-    );
+    });
   }
 
   /**
@@ -89,8 +81,10 @@ export class ProductsService {
    * @returns Promise<Product>
    * @memberOf ProductsService
    */
-  public async findProductById(id: number): Promise<Product> {
-    return await this.findProductByIdProvider.findOneById(id);
+  public async findProductById(id: number): Promise<Product | null> {
+    return await this.productRepository.findOneBy({
+      id,
+    });
   }
   /**
    * @public
@@ -120,9 +114,12 @@ export class ProductsService {
    * @memberOf ProductsService
    */
 
-  //TODO: Fix Later. Maybe Create a Provider for it also.
   public async deleteProduct(identifier: string): Promise<string> {
-    await this.findProductByIdentifier(identifier);
+    const product = await this.findProductByIdentifier(identifier);
+
+    if (!product) {
+      throw new NotFoundException('product not found');
+    }
 
     await this.productRepository.delete({ identifier });
 
@@ -141,6 +138,10 @@ export class ProductsService {
     user: GetUserData,
   ): Promise<Pagination<Product>> {
     const auth_user = await this.usersService.findUserByIdentifier(user.sub);
+
+    if (!auth_user) {
+      throw new NotFoundException('user not found');
+    }
 
     return await this.paginationProvider.paginateQuery(
       {

@@ -2,9 +2,6 @@ import { Injectable } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CreateUserProvider } from './create-user.provider';
-import { FindUserByEmailProvider } from './find-user-by-email.provider';
-import { FindUserByIdentifierProvider } from './find-user-by-identifier.provider';
-import { FindUserByIdProvider } from './find-user-by-id.provider';
 import { CreateUserOptions } from '../interfaces/create-user.interface';
 import User from '../entities/user.entity';
 
@@ -12,21 +9,15 @@ import User from '../entities/user.entity';
 export class UsersService {
   constructor(
     /**
+     * Import User Repository
+     */
+    @InjectRepository(User)
+    private readonly userRepository: Repository<User>,
+
+    /**
      * Import CreateUserProvider
      */
     private readonly createUserProvider: CreateUserProvider,
-    /**
-     * Import FindUserByEmailProvider
-     */
-    private readonly findUserByEmailProvider: FindUserByEmailProvider,
-    /**
-     * Import Find User By Identifier Provider
-     */
-    private readonly findUserByIdentifierProvider: FindUserByIdentifierProvider,
-    /**
-     * Import Find User By Id Provider
-     */
-    private readonly findUserByIdProvider: FindUserByIdProvider,
   ) {}
 
   /**
@@ -45,8 +36,10 @@ export class UsersService {
    * @param email
    * @memberOf UsersService
    */
-  public async findOneByEmail(email: string): Promise<User> {
-    return await this.findUserByEmailProvider.findUserByEmail(email);
+  public async findOneByEmail(email: string): Promise<User | null> {
+    return await this.userRepository.findOneBy({
+      email,
+    });
   }
 
   /**
@@ -55,8 +48,10 @@ export class UsersService {
    * @param id
    * @memberOf UsersService
    */
-  public async findOneById(id: number): Promise<User> {
-    return await this.findUserByIdProvider.findOneById(id);
+  public async findOneById(id: number): Promise<User | null> {
+    return await this.userRepository.findOneBy({
+      id,
+    });
   }
 
   /**
@@ -65,9 +60,7 @@ export class UsersService {
    * @param identifier
    * @memberOf UsersService
    */
-  public async findUserByIdentifier(identifier: string): Promise<User> {
-    return await this.findUserByIdentifierProvider.findOneByIdentifier(
-      identifier,
-    );
+  public async findUserByIdentifier(identifier: string): Promise<User | null> {
+    return await this.userRepository.findOneBy({ identifier });
   }
 }

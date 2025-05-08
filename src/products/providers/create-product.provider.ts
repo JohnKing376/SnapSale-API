@@ -2,6 +2,7 @@ import {
   Injectable,
   InternalServerErrorException,
   Logger,
+  NotFoundException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Product } from '../entities/product.entity';
@@ -32,20 +33,24 @@ export class CreateProductProvider {
   ): Promise<Product> {
     const merchantId = await this.usersService.findUserByIdentifier(user.sub);
 
+    if (!merchantId) {
+      throw new NotFoundException('user not found');
+    }
+
     try {
       const newProduct = this.productRepository.create({
         ...createProductOptions,
         merchant: merchantId,
       });
 
-      await this.productRepository.save(newProduct);
-
-      return newProduct;
+      return await this.productRepository.save(newProduct);
     } catch (CreateProductProviderError) {
       this.logger.log(
         `[CREATE-PRODUCT-PROVIDER-ERROR]: ${JSON.stringify(CreateProductProviderError, null, 2)}`,
       );
-      throw new InternalServerErrorException('Error Creating Product');
+      throw new InternalServerErrorException(
+        'Something went wrong while trying to create the product. Please try again later',
+      );
     }
   }
 }

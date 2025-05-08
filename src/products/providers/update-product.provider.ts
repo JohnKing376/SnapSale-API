@@ -26,8 +26,7 @@ export class UpdateProductProvider {
   ): Promise<Product | null> {
     const product = await this.productRepository.findOneBy({ identifier });
 
-    if (!product)
-      throw new NotFoundException('product with this identifier not found');
+    if (!product) throw new NotFoundException('product not found');
 
     try {
       await this.productRepository.update(
@@ -42,7 +41,9 @@ export class UpdateProductProvider {
       this.logger.error(
         `[UPDATE-PRODUCT-PROVIDER-ERROR]: ${JSON.stringify(UpdateProductProviderError, null, 2)}]`,
       );
-      throw new InternalServerErrorException('Error Updating Product');
+      throw new InternalServerErrorException(
+        'Something went wrong while updating the product. Try again later',
+      );
     }
   }
 }
