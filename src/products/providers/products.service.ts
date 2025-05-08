@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { Product } from '../entities/product.entity';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -11,6 +11,8 @@ import { PaginationProvider } from '../../common/pagination/providers/pagination
 import { Pagination } from '../../common/pagination/interfaces/pagination.interface';
 import { PaginateQuery } from '../interfaces/paginate-query.interface';
 import { UsersService } from '../../users/providers/users.service';
+import { FindProductByIdProvider } from './find-product-by-id.provider';
+import { FindProductByIdentifierProvider } from './find-product-by-identifier.provider';
 
 @Injectable()
 export class ProductsService {
@@ -36,6 +38,14 @@ export class ProductsService {
      * Import User Service
      */
     private readonly usersService: UsersService,
+    /**
+     * Import Find Product By ID Provider
+     */
+    private readonly findProductByIdProvider: FindProductByIdProvider,
+    /**
+     * Import Find Product By Identifier Provider
+     */
+    private readonly findProductByIdentifierProvider: FindProductByIdentifierProvider,
   ) {}
 
   /**
@@ -44,7 +54,7 @@ export class ProductsService {
    * @author John O.King
    * @param user
    * @param createProductOptions
-   * @returns Promise<Product|>
+   * @returns Promise<Product>
    * @memberOf ProductsService
    */
   public async createProduct(
@@ -62,19 +72,13 @@ export class ProductsService {
    * @description Method to find one product by its identifier
    * @author John O.King
    * @param identifier
-   * @returns Promise<Product | null>
+   * @returns Promise<Product>
    * @memberOf ProductsService
    */
   public async findProductByIdentifier(identifier: string): Promise<Product> {
-    const product = await this.productRepository.findOneBy({
+    return await this.findProductByIdentifierProvider.findOneByIdentifier(
       identifier,
-    });
-
-    if (!product) {
-      throw new NotFoundException('product with this identifier not found');
-    }
-
-    return product;
+    );
   }
 
   /**
@@ -82,18 +86,11 @@ export class ProductsService {
    * @description Method to find one product by its primary key
    * @author John O.King
    * @param id
-   * @returns Promise<Product | null>
+   * @returns Promise<Product>
    * @memberOf ProductsService
    */
   public async findProductById(id: number): Promise<Product> {
-    const product = await this.productRepository.findOneBy({
-      id,
-    });
-    if (!product) {
-      throw new NotFoundException('product with this id not found');
-    }
-
-    return product;
+    return await this.findProductByIdProvider.findOneById(id);
   }
   /**
    * @public
@@ -101,7 +98,7 @@ export class ProductsService {
    * @author John O.King
    * @param updateProductOptions
    * @param identifier
-   * @returns Promise<Product| null>
+   * @returns Promise<Product | null>
    * @memberOf ProductsService
    */
   public async updateProduct(
@@ -123,7 +120,7 @@ export class ProductsService {
    * @memberOf ProductsService
    */
 
-  //TODO: Test
+  //TODO: Fix Later. Maybe Create a Provider for it also.
   public async deleteProduct(identifier: string): Promise<string> {
     await this.findProductByIdentifier(identifier);
 

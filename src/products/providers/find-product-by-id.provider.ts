@@ -20,10 +20,10 @@ export class FindProductByIdProvider {
     private readonly productRepository: Repository<Product>,
   ) {}
 
-  public async findOneByIdentifier(identifier: string): Promise<Product> {
+  public async findOneById(id: number): Promise<Product> {
     try {
       const product = await this.productRepository.findOneBy({
-        identifier,
+        id,
       });
 
       if (!product) {
