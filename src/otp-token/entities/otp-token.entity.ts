@@ -1,6 +1,7 @@
 import { AbstractModel } from '../../common/models/abstract-model.entity';
 import { Column, Entity, JoinColumn, OneToOne } from 'typeorm';
 import User from '../../users/entities/user.entity';
+import { OtpTokenType } from '../enums/otp-token-type.enums';
 
 @Entity({ name: 'otp_token' })
 export default class OtpToken extends AbstractModel {
@@ -14,12 +15,14 @@ export default class OtpToken extends AbstractModel {
     type: 'boolean',
     default: false,
   })
-  isRevoked: boolean;
+  isUsed: boolean;
 
   @Column({
-    type: 'varchar',
+    type: 'enum',
+    enum: OtpTokenType,
+    nullable: true,
   })
-  purpose: string;
+  purpose: OtpTokenType;
 
   @Column()
   userId: number;
