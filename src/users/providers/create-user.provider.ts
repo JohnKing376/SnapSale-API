@@ -2,6 +2,7 @@ import {
   BadRequestException,
   Injectable,
   InternalServerErrorException,
+  Logger,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import User from '../entities/user.entity';
@@ -15,6 +16,7 @@ import { OtpTokenType } from '../../otp-token/enums/otp-token-type.enums';
 
 @Injectable()
 export class CreateUserProvider {
+  private readonly logger = new Logger('CreateUserProvider');
   constructor(
     /**
      * Inject User Repository
@@ -52,7 +54,7 @@ export class CreateUserProvider {
       const newUser = this.userRepository.create({
         ...createUserOptions,
         password: hashPassword,
-        createdAt: new Date(),
+        createdAt: Date.now(),
       });
 
       await this.userRepository.save(newUser);
@@ -78,13 +80,11 @@ export class CreateUserProvider {
 
       return newUser;
     } catch (CreateUserProviderError) {
-      console.log(CreateUserProviderError);
+      this.logger.log(
+        `[CREATE-USER-PROVIDER-ERROR]: ${CreateUserProviderError}`,
+      );
       throw new InternalServerErrorException('Internal Server Error', {
-        description: JSON.stringify(
-          `CreateUserProviderError.${CreateUserProviderError}`,
-          null,
-          2,
-        ),
+        description: 'Error creating user',
       });
     }
   }

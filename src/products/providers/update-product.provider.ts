@@ -1,6 +1,7 @@
 import {
   Injectable,
   InternalServerErrorException,
+  Logger,
   NotFoundException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -10,6 +11,7 @@ import { UpdateProducts } from '../types/update-products.types';
 
 @Injectable()
 export class UpdateProductProvider {
+  private readonly logger = new Logger('UpdateProductProvider');
   constructor(
     /**
      * Import Product Repository
@@ -37,14 +39,10 @@ export class UpdateProductProvider {
         where: { identifier: product.identifier },
       });
     } catch (UpdateProductProviderError) {
-      throw new InternalServerErrorException('Internal Server Error', {
-        description: JSON.stringify(
-          `UpdateProductProviderError.${UpdateProductProviderError}`,
-          null,
-          2,
-        ),
-        cause: UpdateProductProviderError,
-      });
+      this.logger.error(
+        `[UPDATE-PRODUCT-PROVIDER-ERROR]: ${JSON.stringify(UpdateProductProviderError, null, 2)}]`,
+      );
+      throw new InternalServerErrorException('Error Updating Product');
     }
   }
 }

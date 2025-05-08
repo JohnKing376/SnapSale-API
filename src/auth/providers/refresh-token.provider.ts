@@ -3,6 +3,7 @@ import {
   forwardRef,
   Inject,
   Injectable,
+  Logger,
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import jwtConfig from '../config/jwt.config';
@@ -15,6 +16,7 @@ import { GenerateTokenProvider } from './generate-token.provider';
 
 @Injectable()
 export class RefreshTokenProvider {
+  private readonly logger = new Logger('RefreshTokenProvider');
   constructor(
     /**
      * Import Jwt Service
@@ -46,13 +48,15 @@ export class RefreshTokenProvider {
         issuer: this.jwtConfiguration.issuer,
       });
 
-      const user = await this.userService.findOneByIdentifier(sub);
+      const user = await this.userService.findUserByIdentifier(sub);
 
-      return await this.generateTokenProvider.generateTokens(user!);
+      return await this.generateTokenProvider.generateTokens(user);
     } catch (generateRefreshTokenError) {
+      this.logger.error(
+        `[GENERATE-TOKEN-PROVIDER-ERROR]:, ${generateRefreshTokenError}`,
+      );
       throw new BadRequestException('Bad Request', {
         description: 'Invalid Token',
-        cause: generateRefreshTokenError,
       });
     }
   }

@@ -1,6 +1,6 @@
 import { OtpTokenType } from '../enums/otp-token-type.enums';
 
-export interface IOtpToken {
+export interface ICreateToken {
   token?: number;
   isUsed?: boolean;
   purpose: OtpTokenType;

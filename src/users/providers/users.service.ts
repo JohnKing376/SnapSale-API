@@ -1,19 +1,16 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { Repository } from 'typeorm';
-import User from '../entities/user.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CreateUserProvider } from './create-user.provider';
-import { CreateUserDto } from '../dtos/create-user.dto';
 import { FindUserByEmailProvider } from './find-user-by-email.provider';
+import { FindUserByIdentifierProvider } from './find-user-by-identifier.provider';
+import { FindUserByIdProvider } from './find-user-by-id.provider';
+import { CreateUserOptions } from '../interfaces/create-user.interface';
+import User from '../entities/user.entity';
 
 @Injectable()
 export class UsersService {
   constructor(
-    /**
-     * Inject User Repository
-     */
-    @InjectRepository(User)
-    private userRepository: Repository<User>,
     /**
      * Import CreateUserProvider
      */
@@ -22,25 +19,55 @@ export class UsersService {
      * Import FindUserByEmailProvider
      */
     private readonly findUserByEmailProvider: FindUserByEmailProvider,
+    /**
+     * Import Find User By Identifier Provider
+     */
+    private readonly findUserByIdentifierProvider: FindUserByIdentifierProvider,
+    /**
+     * Import Find User By Id Provider
+     */
+    private readonly findUserByIdProvider: FindUserByIdProvider,
   ) {}
 
-  public async createUser(createUserDto: CreateUserDto): Promise<User> {
-    return await this.createUserProvider.createUser(createUserDto);
+  /**
+   * @public
+   * @description Method to create user
+   * @param createUserOptions
+   * @memberOf UsersService
+   */
+  public async createUser(createUserOptions: CreateUserOptions): Promise<User> {
+    return await this.createUserProvider.createUser(createUserOptions);
   }
 
+  /**
+   * @public
+   * @description Method to find one user by email
+   * @param email
+   * @memberOf UsersService
+   */
   public async findOneByEmail(email: string): Promise<User> {
     return await this.findUserByEmailProvider.findUserByEmail(email);
   }
 
-  public async findOneById(id: number) {
-    const user = await this.userRepository.findOneBy({ id });
-    if (!user) throw new NotFoundException('User not found');
-    return user;
+  /**
+   * @public
+   * @description Method to find one user by their primary key
+   * @param id
+   * @memberOf UsersService
+   */
+  public async findOneById(id: number): Promise<User> {
+    return await this.findUserByIdProvider.findOneById(id);
   }
 
-  public async findOneByIdentifier(identifier: string): Promise<User | null> {
-    const user = await this.userRepository.findOneBy({ identifier });
-    if (!user) throw new NotFoundException('User not found');
-    return user;
+  /**
+   * @public
+   * @description Method to find one user by their identifier
+   * @param identifier
+   * @memberOf UsersService
+   */
+  public async findUserByIdentifier(identifier: string): Promise<User> {
+    return await this.findUserByIdentifierProvider.findOneByIdentifier(
+      identifier,
+    );
   }
 }

@@ -9,6 +9,8 @@ import { UpdateProductProvider } from './providers/update-product.provider';
 import { PaginationModule } from '../common/pagination/pagination.module';
 import { APP_GUARD } from '@nestjs/core';
 import { RoleTypeGuard } from '../auth/guards/authentication/role-type.guard';
+import { FindProductByIdentifierProvider } from './providers/find-product-by-identifier.provider';
+import { FindProductByIdProvider } from './providers/find-product-by-id.provider';
 
 @Module({
   providers: [
@@ -19,6 +21,8 @@ import { RoleTypeGuard } from '../auth/guards/authentication/role-type.guard';
       provide: APP_GUARD,
       useClass: RoleTypeGuard,
     },
+    FindProductByIdentifierProvider,
+    FindProductByIdProvider,
   ],
   controllers: [ProductsController],
   imports: [TypeOrmModule.forFeature([Product]), UsersModule, PaginationModule],

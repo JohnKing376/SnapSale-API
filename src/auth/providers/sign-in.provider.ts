@@ -1,9 +1,9 @@
 import {
+  BadRequestException,
   forwardRef,
-  HttpException,
-  HttpStatus,
   Inject,
   Injectable,
+  Logger,
 } from '@nestjs/common';
 import { UsersService } from '../../users/providers/users.service';
 import { SignInUser } from '../interfaces/sign-in-user.interface';
@@ -12,6 +12,7 @@ import { GenerateTokenProvider } from './generate-token.provider';
 
 @Injectable()
 export class SignInProvider {
+  private readonly logger = new Logger('SignInProvider');
   constructor(
     /**
      * Inject User Service
@@ -35,14 +36,17 @@ export class SignInProvider {
 
     const passwordMatch = await this.hashingProvider.comparePassword(
       password,
-      user!.password,
+      user.password,
     );
 
     if (!passwordMatch) {
-      throw new HttpException('Invalid Credentials', HttpStatus.BAD_REQUEST);
+      this.logger.log('[INVALID-CREDENTIALS]');
+      throw new BadRequestException('Invalid Credentials');
     }
 
-    const tokens = await this.generateTokenProvider.generateTokens(user!);
+    const tokens = await this.generateTokenProvider.generateTokens(user);
+
+    this.logger.log('[AUTHENTICATION SUCCESSFUL]');
 
     return { user, tokens };
   }

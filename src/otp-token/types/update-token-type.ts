@@ -1,3 +1,3 @@
-import { IOtpToken } from '../interfaces/otp-token-interface';
+import { ICreateToken } from '../interfaces/otp-token-interface';
 
-export type UpdateToken = Partial<IOtpToken>;
+export type UpdateToken = Partial<ICreateToken>;

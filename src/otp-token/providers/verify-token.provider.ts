@@ -4,6 +4,8 @@ import {
   Injectable,
   NotFoundException,
   forwardRef,
+  InternalServerErrorException,
+  Logger,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import OtpToken from '../entities/otp-token.entity';
@@ -13,6 +15,7 @@ import { IVerifyToken } from '../interfaces/verify-token.interface';
 
 @Injectable()
 export class VerifyTokenProvider {
+  private readonly logger = new Logger('VerifyTokenProvider');
   constructor(
     /**
      * Import Otp Token Repository
@@ -47,7 +50,12 @@ export class VerifyTokenProvider {
     const isValid = otpToken.token === token;
 
     if (isValid) {
-      await this.otpTokenRepository.update(otpToken.id, { isUsed: true });
+      try {
+        await this.otpTokenRepository.update(otpToken.id, { isUsed: true });
+      } catch (error) {
+        this.logger.log(`[VERIFY-TOKEN-PROVIDER]: ${error}`);
+        throw new InternalServerErrorException('Error updating token');
+      }
     }
 
     return isValid;

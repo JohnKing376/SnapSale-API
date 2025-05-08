@@ -7,6 +7,8 @@ import User from './entities/user.entity';
 import { AuthModule } from '../auth/auth.module';
 import { FindUserByEmailProvider } from './providers/find-user-by-email.provider';
 import { OtpTokenModule } from '../otp-token/otp-token.module';
+import { FindUserByIdentifierProvider } from './providers/find-user-by-identifier.provider';
+import { FindUserByIdProvider } from './providers/find-user-by-id.provider';
 
 @Module({
   imports: [
@@ -14,7 +16,13 @@ import { OtpTokenModule } from '../otp-token/otp-token.module';
     forwardRef(() => AuthModule),
     forwardRef(() => OtpTokenModule),
   ],
-  providers: [UsersService, CreateUserProvider, FindUserByEmailProvider],
+  providers: [
+    UsersService,
+    CreateUserProvider,
+    FindUserByEmailProvider,
+    FindUserByIdentifierProvider,
+    FindUserByIdProvider,
+  ],
   controllers: [UsersController],
   exports: [UsersService],
 })

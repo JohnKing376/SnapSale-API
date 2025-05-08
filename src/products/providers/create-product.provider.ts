@@ -1,7 +1,7 @@
 import {
   Injectable,
   InternalServerErrorException,
-  NotFoundException,
+  Logger,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Product } from '../entities/product.entity';
@@ -12,6 +12,7 @@ import { GetUserData } from '../../auth/interfaces/get-user-data.inteface';
 
 @Injectable()
 export class CreateProductProvider {
+  private readonly logger = new Logger('CreateProductProvider');
   constructor(
     /**
      * Import Product Repository
@@ -29,13 +30,7 @@ export class CreateProductProvider {
     user: GetUserData,
     createProductOptions: ICreateProduct,
   ): Promise<Product> {
-    const merchantId = await this.usersService.findOneByIdentifier(user.sub);
-
-    console.log(user.sub);
-
-    if (!merchantId) {
-      throw new NotFoundException('user not found');
-    }
+    const merchantId = await this.usersService.findUserByIdentifier(user.sub);
 
     try {
       const newProduct = this.productRepository.create({
@@ -47,14 +42,10 @@ export class CreateProductProvider {
 
       return newProduct;
     } catch (CreateProductProviderError) {
-      throw new InternalServerErrorException('Internal Server Error', {
-        description: JSON.stringify(
-          `CreateProductProviderError.${CreateProductProviderError}`,
-          null,
-          2,
-        ),
-        cause: CreateProductProviderError,
-      });
+      this.logger.log(
+        `[CREATE-PRODUCT-PROVIDER-ERROR]: ${JSON.stringify(CreateProductProviderError, null, 2)}`,
+      );
+      throw new InternalServerErrorException('Error Creating Product');
     }
   }
 }

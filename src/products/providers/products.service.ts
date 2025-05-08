@@ -65,9 +65,7 @@ export class ProductsService {
    * @returns Promise<Product | null>
    * @memberOf ProductsService
    */
-  public async findProductByIdentifier(
-    identifier: string,
-  ): Promise<Product | null> {
+  public async findProductByIdentifier(identifier: string): Promise<Product> {
     const product = await this.productRepository.findOneBy({
       identifier,
     });
@@ -87,7 +85,7 @@ export class ProductsService {
    * @returns Promise<Product | null>
    * @memberOf ProductsService
    */
-  public async findProductById(id: number): Promise<Product | null> {
+  public async findProductById(id: number): Promise<Product> {
     const product = await this.productRepository.findOneBy({
       id,
     });
@@ -145,8 +143,7 @@ export class ProductsService {
     paginateQueryOptions: PaginateQuery,
     user: GetUserData,
   ): Promise<Pagination<Product>> {
-    //TODO: Maybe add error handling here
-    const auth_user = await this.usersService.findOneByIdentifier(user.sub);
+    const auth_user = await this.usersService.findUserByIdentifier(user.sub);
 
     return await this.paginationProvider.paginateQuery(
       {
@@ -154,7 +151,7 @@ export class ProductsService {
         limit: paginateQueryOptions.limit,
       },
       this.productRepository,
-      { merchantId: auth_user!.id },
+      { merchantId: auth_user.id },
       {
         merchant: true,
       },
