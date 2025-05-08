@@ -6,5 +6,6 @@ export default registerAs('app', () => ({
   mail_port: Number(process.env.MAIL_PORT),
   mail_user: process.env.MAIL_USERNAME,
   mail_password: process.env.MAIL_PASSWORD,
-  business_mail: process.env.BUSINESS_MAIL
+  business_mail: process.env.BUSINESS_MAIL,
+  business_name: process.env.BUSINESS_NAME,
 }));
