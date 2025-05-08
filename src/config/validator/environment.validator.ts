@@ -19,4 +19,6 @@ export default Joi.object({
   MAIL_PASSWORD: Joi.string().required(),
   MAIL_USERNAME: Joi.string().required(),
   BUSINESS_MAIL: Joi.string().required(),
+  BUSINESS_NAME: Joi.string().required(),
+  OTP_TOKEN_TTL: Joi.number().required(),
 });

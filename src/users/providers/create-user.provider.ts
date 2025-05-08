@@ -8,6 +8,10 @@ import User from '../entities/user.entity';
 import { Repository } from 'typeorm';
 import { CreateUserOptions } from '../interfaces/create-user.interface';
 import { HashingProvider } from '../../auth/providers/hashing.provider';
+import { MailService } from '../../mail/providers/mail.service';
+import { EmailType } from '../../mail/enums/mail-type.enums';
+import { OtpTokenService } from '../../otp-token/providers/otp-token.service';
+import { OtpTokenType } from '../../otp-token/enums/otp-token-type.enums';
 
 @Injectable()
 export class CreateUserProvider {
@@ -23,6 +27,10 @@ export class CreateUserProvider {
      */
     // @Inject(forwardRef(() => HashingProvider))
     private readonly hashingProvider: HashingProvider,
+
+    private readonly mailService: MailService,
+
+    private readonly otpTokenService: OtpTokenService,
   ) {}
 
   public async createUser(createUserOptions: CreateUserOptions): Promise<User> {
@@ -48,6 +56,25 @@ export class CreateUserProvider {
       });
 
       await this.userRepository.save(newUser);
+
+      /*******************************/
+      /*For Testing Purposes*/
+
+      await this.otpTokenService.createToken({
+        purpose: OtpTokenType.EMAIL_VERIFICATION,
+        userId: newUser.id,
+      });
+      /*******************************/
+
+      /*******************************/
+      /*For Testing Purposes*/
+      await this.mailService.sendMail({
+        receiversName: newUser.fullName,
+        emailTemplate: EmailType.WELCOME_EMAIL,
+        receiversEmail: newUser.email,
+        emailSubject: 'WELCOME_EMAIL',
+      });
+      /*******************************/
 
       return newUser;
     } catch (CreateUserProviderError) {

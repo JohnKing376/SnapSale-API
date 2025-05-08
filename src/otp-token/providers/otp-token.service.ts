@@ -1,5 +1,6 @@
 import {
   BadRequestException,
+  Inject,
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
@@ -10,6 +11,10 @@ import OtpToken from '../entities/otp-token.entity';
 import { IVerifyToken } from '../interfaces/verify-token.interface';
 import { UsersService } from '../../users/providers/users.service';
 import { UpdateToken } from '../types/update-token-type';
+import { VerifyTokenProvider } from './verify-token.provider';
+import appConfig from '../../config/app.config';
+import { ConfigType } from '@nestjs/config';
+import AppConfig from '../../config/app.config';
 
 //TODO: Add Providers to this Service
 @Injectable()
@@ -21,20 +26,28 @@ export class OtpTokenService {
     @InjectRepository(OtpToken)
     private readonly otpTokenRepository: Repository<OtpToken>,
     /**
-     * Import User User
+     * Import Verify Token Provider
      */
-    private readonly usersService: UsersService,
+    private readonly verifyTokenProvider: VerifyTokenProvider,
+    /**
+     * Inject App Config
+     */
+    @Inject(appConfig.KEY)
+    private readonly appConfig: ConfigType<typeof AppConfig>,
   ) {}
 
-  public async createToken(createOtpTokenOptions: IOtpToken) {
-    const expiryDate = new Date(Date.now() + 5 * 60 * 1000); // TODO: Add an Abstraction Layer to this field
-
+  public async createToken(
+    createOtpTokenOptions: IOtpToken,
+  ): Promise<OtpToken> {
     const newToken = this.otpTokenRepository.create({
       ...createOtpTokenOptions,
-      expiresAt: expiryDate,
+      token: this.generateToken(6),
+      purpose: createOtpTokenOptions.purpose,
+      expiresAt: this.appConfig.otp_token_ttl,
     });
 
     await this.otpTokenRepository.save(newToken);
+    return newToken;
   }
 
   //TODO: Refine Generate Token
@@ -61,67 +74,6 @@ export class OtpTokenService {
    * @returns boolean
    */
   public async verifyToken(verifyTokenOptions: IVerifyToken): Promise<boolean> {
-    const { email, token } = verifyTokenOptions;
-
-    const user = await this.usersService.findOneByEmail(email);
-
-    const otpToken = await this.otpTokenRepository.findOne({
-      where: {
-        id: user.id,
-      },
-    });
-
-    if (!otpToken) {
-      throw new NotFoundException('Not Found', {
-        description: 'token associated with this user not found',
-      });
-    }
-
-    if (otpToken.expiresAt < new Date()) {
-      await this.otpTokenRepository.delete({
-        id: otpToken.id,
-      });
-      throw new BadRequestException('Bad Request', {
-        description: 'Token is expired',
-      });
-    }
-
-    if (otpToken.token === token) {
-      await this.updateToken(otpToken.id, {
-        isRevoked: true,
-      });
-    }
-
-    return otpToken.token === token;
-  }
-
-  /**
-   * @description Method to update token
-   * @param key
-   * @param updateTokenOptions
-   */
-  public async updateToken(key: number, updateTokenOptions: UpdateToken) {
-    const token = await this.otpTokenRepository.findOne({
-      where: {
-        id: key,
-      },
-    });
-
-    if (!token) {
-      throw new NotFoundException('Not Found', {
-        description: 'token associated with this user not found',
-      });
-    }
-
-    await this.otpTokenRepository.update(
-      {
-        id: key,
-      },
-      updateTokenOptions,
-    );
-
-    return this.otpTokenRepository.findOne({
-      where: { id: token.id },
-    });
+    return await this.verifyTokenProvider.verifyToken(verifyTokenOptions);
   }
 }
