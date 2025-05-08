@@ -1,29 +1,68 @@
 import { MailerService } from '@nestjs-modules/mailer';
-import { Inject, Injectable } from '@nestjs/common';
-import User from '../../users/entities/user.entity';
+import {
+  Inject,
+  Injectable,
+  Logger,
+  RequestTimeoutException,
+} from '@nestjs/common';
 import { ConfigType } from '@nestjs/config';
 import AppConfig from '../../config/app.config';
 import appConfig from '../../config/app.config';
+import { IEmailOptions } from '../interfaces/send-email.interface';
 
 @Injectable()
 export class MailService {
   constructor(
-    private mailerService: MailerService,
-
+    /**
+     * Import Mailer Service
+     */
+    private readonly mailerService: MailerService,
+    /**
+     * Inject App Config
+     */
     @Inject(appConfig.KEY)
     private readonly appConfig: ConfigType<typeof AppConfig>,
   ) {}
 
-  public async sendWelcomeEmail(user: User): Promise<void> {
-    await this.mailerService.sendMail({
-      to: user.email,
-      from: this.appConfig.business_mail,
-      subject: 'WELCOME EMAIL',
-      template: './welcome',
-      context: {
-        name: user.fullName,
-        email: user.email,
-      },
-    });
+  private logger = new Logger('MailService');
+
+  public async sendMail(emailOptions: IEmailOptions): Promise<void> {
+    try {
+      /**
+       * Destructure the email Options
+       */
+      const {
+        sendersEmail = this.appConfig.business_mail,
+        sendersName = this.appConfig.business_name,
+        receiversEmail,
+        receiversName,
+        emailSubject,
+        emailTemplate,
+        emailPayload = {},
+        emailAttachments = [],
+      } = emailOptions;
+      await this.mailerService.sendMail({
+        from: sendersEmail,
+        sender: sendersName,
+        to: receiversEmail,
+        subject: emailSubject,
+        template: emailTemplate,
+        context: {
+          fullName: receiversName,
+          ...emailPayload,
+        },
+        attachments: emailAttachments.length > 0 ? emailAttachments : undefined,
+      });
+      this.logger.log('MAIL SENT');
+    } catch (sendMailError) {
+      this.logger.error('MAIL FAILED');
+      throw new RequestTimeoutException('Mail could not be sent', {
+        description: JSON.stringify(
+          `MailService.sendMailError: ${sendMailError}`,
+          null,
+          2,
+        ),
+      });
+    }
   }
 }
