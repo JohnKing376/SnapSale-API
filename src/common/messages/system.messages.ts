@@ -92,3 +92,10 @@ export const SystemMessages = {
     TOKEN_REVOKED: 'This token has been revoked.',
   },
 };
+
+//TODO: Refine System Messages..
+//Constants
+export const SIGN_UP_SUCCESSFUL_PROCEED_TO_ACTIVATE_EMAIL =
+  'Sign up Successful. Proceed to Email Activation';
+export const SIGN_UP_SUCCESSFUL_WELCOME_EMAIL =
+  'Sign up Successful. Welcome to SnapSale Shop';

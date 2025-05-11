@@ -18,10 +18,10 @@ export class MailService {
      */
     private readonly mailerService: MailerService,
     /**
-     * Inject App Config
+     * Inject Mail Config
      */
     @Inject(mailConfig.KEY)
-    private readonly config: ConfigType<typeof MailConfig>,
+    private readonly mailConfig: ConfigType<typeof MailConfig>,
   ) {}
 
   private logger = new Logger('MailService');
@@ -32,15 +32,16 @@ export class MailService {
        * Destructure the email Options
        */
       const {
-        sendersEmail = this.config.business_mail,
-        sendersName = this.config.business_name,
+        sendersEmail = this.mailConfig.business_mail,
+        sendersName = this.mailConfig.business_name,
         receiversEmail,
-        receiversName,
         emailSubject,
         emailTemplate,
-        emailPayload = {},
+        fullName,
+        token,
         emailAttachments = [],
       } = emailOptions;
+
       await this.mailerService.sendMail({
         from: sendersEmail,
         sender: sendersName,
@@ -48,8 +49,8 @@ export class MailService {
         subject: emailSubject,
         template: emailTemplate,
         context: {
-          fullName: receiversName,
-          ...emailPayload,
+          fullName: fullName,
+          token: token,
         },
         attachments: emailAttachments.length > 0 ? emailAttachments : undefined,
       });

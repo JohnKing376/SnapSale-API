@@ -21,4 +21,6 @@ export default Joi.object({
   BUSINESS_MAIL: Joi.string().required(),
   BUSINESS_NAME: Joi.string().required(),
   OTP_TOKEN_TTL: Joi.number().required(),
+  QUEUE_HOST: Joi.string().required(),
+  QUEUE_PORT: Joi.number().required(),
 });

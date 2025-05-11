@@ -14,5 +14,6 @@ export interface IEmailOptions {
   emailSubject: string;
   emailTemplate: EmailType;
   emailAttachments?: Attachment[];
-  emailPayload?: string;
+  fullName: string;
+  token?: number;
 }
