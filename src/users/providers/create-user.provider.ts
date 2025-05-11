@@ -9,8 +9,20 @@ import User from '../entities/user.entity';
 import { Repository } from 'typeorm';
 import { CreateUserOptions } from '../interfaces/create-user.interface';
 import { HashingProvider } from '../../auth/providers/hashing.provider';
-import { MailService } from '../../mail/providers/mail.service';
 import { OtpTokenService } from '../../otp-token/providers/otp-token.service';
+import { Queue } from 'bullmq';
+import { InjectQueue } from '@nestjs/bullmq';
+import {
+  MAIL,
+  SEND_EMAIL_VERIFICATION_OTP_JOB,
+  WELCOME_MAIL_JOB,
+} from '../constants/user-mail-job.constants';
+import { OtpTokenType } from '../../otp-token/enums/otp-token-type.enums';
+import { IMailOptions } from '../interfaces/email-queue.job.interface';
+import {
+  SIGN_UP_SUCCESSFUL_PROCEED_TO_ACTIVATE_EMAIL,
+  SIGN_UP_SUCCESSFUL_WELCOME_EMAIL,
+} from '../../common/messages/system.messages';
 
 @Injectable()
 export class CreateUserProvider {
@@ -27,8 +39,15 @@ export class CreateUserProvider {
      */
     private readonly hashingProvider: HashingProvider,
 
-    private readonly mailService: MailService,
+    /**
+     * Inject Job Queue
+     */
+    @InjectQueue(MAIL)
+    private readonly emailQueue: Queue,
 
+    /**
+     * Import OtpTokenService
+     */
     private readonly otpTokenService: OtpTokenService,
   ) {}
 
@@ -48,32 +67,31 @@ export class CreateUserProvider {
     );
 
     try {
-      const newUser = this.userRepository.create({
+      const createUser = this.userRepository.create({
         ...createUserOptions,
         password: hashPassword,
         createdAt: new Date(Date.now()).toISOString(),
       });
 
-      /*******************************/
-      /*For Testing Purposes*/
-      //
-      // await this.otpTokenService.createToken({
-      //   purpose: OtpTokenType.EMAIL_VERIFICATION,
-      //   userId: newUser.id,
-      // });
-      /*******************************/
+      const newUser = await this.userRepository.save(createUser);
 
-      /*******************************/
-      // /*For Testing Purposes*/
-      // await this.mailService.sendMail({
-      //   receiversName: newUser.fullName,
-      //   emailTemplate: EmailType.WELCOME_EMAIL,
-      //   receiversEmail: newUser.email,
-      //   emailSubject: 'WELCOME_EMAIL',
-      // });
-      /*******************************/
+      const otpToken = await this.otpTokenService.createToken({
+        purpose: OtpTokenType.EMAIL_VERIFICATION,
+        userId: newUser.id,
+      });
 
-      return await this.userRepository.save(newUser);
+      await this.emailQueue.add(WELCOME_MAIL_JOB, {
+        userId: newUser.id,
+        subject: SIGN_UP_SUCCESSFUL_WELCOME_EMAIL,
+      } satisfies IMailOptions);
+
+      await this.emailQueue.add(SEND_EMAIL_VERIFICATION_OTP_JOB, {
+        userId: newUser.id,
+        subject: SIGN_UP_SUCCESSFUL_PROCEED_TO_ACTIVATE_EMAIL,
+        token: otpToken.token,
+      } satisfies IMailOptions);
+
+      return newUser;
     } catch (CreateUserProviderError) {
       this.logger.error(
         `[CREATE-USER-PROVIDER-ERROR]: ----->
