@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>Your OTP Code</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background-color: #f4f4f4;
+            padding: 2rem;
+        }
+        .container {
+            background-color: white;
+            padding: 2rem;
+            border-radius: 8px;
+            max-width: 500px;
+            margin: 0 auto;
+            box-shadow: 0 0 10px rgba(0,0,0,0.05);
+            text-align: center;
+        }
+        .otp {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #007bff;
+            margin: 1rem 0;
+        }
+        .info {
+            font-size: 0.95rem;
+            color: #555;
+        }
+        .footer {
+            margin-top: 2rem;
+            font-size: 0.9rem;
+            color: #666;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h2>Hello <%= fullName %>,</h2>
+
+    <p>Use the OTP code below to complete your verification:</p>
+
+    <div class="otp"><%= token %></div>
+
+    <p class="info">This code is valid for the next <%= process.env.OTP_TOKEN_TTL %> minutes.</p>
+
+    <p class="info">If you didn’t request this code, you can ignore this email.</p>
+
+    <div class="footer">
+        &copy; 2025 SnapSale. All rights reserved.
+    </div>
+</div>
+</body>
+</html>
