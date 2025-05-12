@@ -26,7 +26,9 @@ export class UsersService {
    * @param createUserOptions
    * @memberOf UsersService
    */
-  public async createUser(createUserOptions: CreateUserOptions): Promise<User> {
+  public async createUser(
+    createUserOptions: CreateUserOptions,
+  ): Promise<{ newUser: User; accessToken: string }> {
     return await this.createUserProvider.createUser(createUserOptions);
   }
 

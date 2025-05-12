@@ -17,7 +17,7 @@ import { RefreshTokenProvider } from './providers/refresh-token.provider';
     ConfigModule.forFeature(jwtConfig),
     JwtModule.registerAsync(jwtConfig.asProvider()),
   ],
-  exports: [AuthService, HashingProvider],
+  exports: [AuthService, HashingProvider, GenerateTokenProvider],
   providers: [
     AuthService,
     SignInProvider,
