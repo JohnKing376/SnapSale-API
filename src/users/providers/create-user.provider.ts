@@ -55,7 +55,9 @@ export class CreateUserProvider {
      * Import OtpTokenService
      */
     private readonly otpTokenService: OtpTokenService,
-
+    /**
+     * Import Generate Token Provider
+     */
     private readonly generateTokenProvider: GenerateTokenProvider,
 
     /**
@@ -65,9 +67,10 @@ export class CreateUserProvider {
     private readonly jwtConfiguration: ConfigType<typeof JwtConfig>,
   ) {}
 
-  public async createUser(
-    createUserOptions: CreateUserOptions,
-  ): Promise<{ newUser: User; accessToken: string }> {
+  public async createUser(createUserOptions: CreateUserOptions): Promise<{
+    newUser: User;
+    tokens: { accessTokens: string; refreshTokens: string };
+  }> {
     const user = await this.userRepository.findOneBy({
       email: createUserOptions.email,
     });
@@ -86,7 +89,7 @@ export class CreateUserProvider {
       const createUser = this.userRepository.create({
         ...createUserOptions,
         password: hashPassword,
-        createdAt: new Date(Date.now()).toISOString(),
+        createdAt: new Date(Date.now()).toISOString(), //TODO
       });
 
       const newUser = await this.userRepository.save(createUser);
@@ -107,16 +110,11 @@ export class CreateUserProvider {
         token: otpToken.token,
       } satisfies IMailOptions);
 
-      const accessToken = await this.generateTokenProvider.signIn<
-        Partial<GetUserData>
-      >(newUser.identifier, this.jwtConfiguration.accessTokenTTl, {
-        email: newUser.email,
-        role: newUser.role,
-      });
+      const tokens = await this.generateTokenProvider.generateTokens(newUser);
 
       return {
         newUser,
-        accessToken,
+        tokens,
       };
     } catch (CreateUserProviderError) {
       this.logger.error(
