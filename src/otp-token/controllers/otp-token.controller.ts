@@ -25,7 +25,6 @@ export class OtpTokenController {
     @GetUser() user: GetUserData,
     @Body() verifyTokenDto: VerifyTokenDto,
   ) {
-    console.log(verifyTokenDto);
     return await this.otpTokenService.verifyToken(user, verifyTokenDto);
   }
 }

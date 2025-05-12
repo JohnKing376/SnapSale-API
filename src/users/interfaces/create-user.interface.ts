@@ -1,4 +1,3 @@
-// import { UserRole } from '../enums/user-role.enum';
 import { RoleType } from '../../auth/enums/role-type.enums';
 
 export interface CreateUserOptions {
@@ -10,4 +9,5 @@ export interface CreateUserOptions {
   password: string;
   googleId?: string;
   profileImg?: string;
+  isVerified?: boolean;
 }

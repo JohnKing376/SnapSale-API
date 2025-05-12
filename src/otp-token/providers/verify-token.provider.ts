@@ -58,8 +58,14 @@ export class VerifyTokenProvider {
     const isValid = otpToken.token === token;
 
     if (isValid) {
+      await this.usersService.updateUser(user.identifier, {
+        isVerified: true,
+      });
       try {
-        await this.otpTokenRepository.update(otpToken.id, { isUsed: true });
+        await this.otpTokenRepository.update(otpToken.id, {
+          isUsed: true,
+          updatedAt: new Date(),
+        });
       } catch (error) {
         this.logger.log(
           `[VERIFY-TOKEN-PROVIDER-ERROR]: -----> ${JSON.stringify(error, null, 2)}`,
@@ -68,7 +74,7 @@ export class VerifyTokenProvider {
           'Something went wrong. Try again later',
         );
       }
-      //TODO: Update user entity file
+      //TODO: Create an update Token Provider
     }
 
     return isValid;

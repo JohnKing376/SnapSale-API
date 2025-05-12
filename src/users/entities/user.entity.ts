@@ -1,5 +1,5 @@
 import { AbstractModel } from 'src/common/models/abstract-model.entity';
-import { Entity, Column, OneToMany, BeforeInsert } from 'typeorm';
+import { Entity, Column, OneToMany, BeforeInsert, BeforeUpdate } from 'typeorm';
 import { Product } from '../../products/entities/product.entity';
 import { Exclude } from 'class-transformer';
 import { RoleType } from '../../auth/enums/role-type.enums';
@@ -81,7 +81,8 @@ export default class User extends AbstractModel {
   isVerified: boolean;
 
   @BeforeInsert()
+  @BeforeUpdate()
   generateFullName() {
-    this.fullName = this.lastName + ' ' + this.firstName;
+    this.fullName = `${this.lastName} ${this.firstName}`;
   }
 }

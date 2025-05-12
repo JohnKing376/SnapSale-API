@@ -1,0 +1,8 @@
+POST http://localhost:3000/users/update-user
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "firstName": "Daniel",
+  "lastName": "Kreg"
+}
