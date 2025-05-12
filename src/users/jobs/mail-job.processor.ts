@@ -30,7 +30,6 @@ export class MailJobProcessor extends WorkerHost {
         if (!user) {
           throw new NotFoundException('user not found');
         }
-        console.log(`Job ${job.id} is progressing: `, job.progress);
 
         this.logger.log(
           `[WELCOME-MAIL-JOB]: SENDING WELCOME_MAIL TO ${user.id}`,
@@ -44,7 +43,7 @@ export class MailJobProcessor extends WorkerHost {
           fullName: user.fullName,
         } satisfies IEmailOptions);
 
-        this.logger.log(`[${job.name}job] completed successfully`);
+        this.logger.log(`[WELCOME-MAIL-JOB]: COMPLETED SUCCESSFULLY`);
 
         break;
       }
@@ -70,6 +69,10 @@ export class MailJobProcessor extends WorkerHost {
             fullName: user.fullName,
             token: data.token,
           } satisfies IEmailOptions);
+
+          this.logger.log(
+            `[SEND_EMAIL_VERIFICATION_OTP_JOB]: COMPLETED SUCCESSFULLY`,
+          );
         }
         break;
       }
