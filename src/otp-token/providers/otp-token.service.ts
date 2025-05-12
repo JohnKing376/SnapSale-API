@@ -4,6 +4,7 @@ import OtpToken from '../entities/otp-token.entity';
 import { IVerifyToken } from '../interfaces/verify-token.interface';
 import { VerifyTokenProvider } from './verify-token.provider';
 import { CreateTokenProvider } from './create-token.provider';
+import { GetUserData } from '../../auth/interfaces/get-user-data.inteface';
 
 @Injectable()
 export class OtpTokenService {
@@ -29,15 +30,21 @@ export class OtpTokenService {
   ): Promise<OtpToken> {
     return await this.createTokenProvider.createToken(createTokenOptions);
   }
-
-  /**
-   * @public
-   * @description Method to verify OtpToken
-   * @param verifyTokenOptions
-   * @returns boolean
-   * @memberOf OtpTokenService
-   */
-  public async verifyToken(verifyTokenOptions: IVerifyToken): Promise<boolean> {
-    return await this.verifyTokenProvider.verifyToken(verifyTokenOptions);
+  //
+  // /**
+  //  * @public
+  //  * @description Method to verify OtpToken
+  //  * @param verifyTokenOptions
+  //  * @returns boolean
+  //  * @memberOf OtpTokenService
+  //  */
+  public async verifyToken(
+    user: GetUserData,
+    verifyTokenOptions: IVerifyToken,
+  ): Promise<boolean> {
+    return await this.verifyTokenProvider.verifyToken(
+      user,
+      verifyTokenOptions,
+    );
   }
 }

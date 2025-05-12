@@ -74,6 +74,12 @@ export default class User extends AbstractModel {
   })
   fullName: string;
 
+  @Column({
+    type: 'boolean',
+    default: false,
+  })
+  isVerified: boolean;
+
   @BeforeInsert()
   generateFullName() {
     this.fullName = this.lastName + ' ' + this.firstName;

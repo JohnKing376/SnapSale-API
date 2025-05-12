@@ -1,5 +1,6 @@
 import {
   BadRequestException,
+  Inject,
   Injectable,
   InternalServerErrorException,
   Logger,
@@ -23,6 +24,11 @@ import {
   SIGN_UP_SUCCESSFUL_PROCEED_TO_ACTIVATE_EMAIL,
   SIGN_UP_SUCCESSFUL_WELCOME_EMAIL,
 } from '../../common/messages/system.messages';
+import { GetUserData } from '../../auth/interfaces/get-user-data.inteface';
+import { GenerateTokenProvider } from '../../auth/providers/generate-token.provider';
+import { ConfigType } from '@nestjs/config';
+import jwtConfig from '../../auth/config/jwt.config';
+import JwtConfig from '../../auth/config/jwt.config';
 
 @Injectable()
 export class CreateUserProvider {
@@ -49,9 +55,19 @@ export class CreateUserProvider {
      * Import OtpTokenService
      */
     private readonly otpTokenService: OtpTokenService,
+
+    private readonly generateTokenProvider: GenerateTokenProvider,
+
+    /**
+     * Import Jwt Config
+     */
+    @Inject(jwtConfig.KEY)
+    private readonly jwtConfiguration: ConfigType<typeof JwtConfig>,
   ) {}
 
-  public async createUser(createUserOptions: CreateUserOptions): Promise<User> {
+  public async createUser(
+    createUserOptions: CreateUserOptions,
+  ): Promise<{ newUser: User; accessToken: string }> {
     const user = await this.userRepository.findOneBy({
       email: createUserOptions.email,
     });
@@ -91,7 +107,17 @@ export class CreateUserProvider {
         token: otpToken.token,
       } satisfies IMailOptions);
 
-      return newUser;
+      const accessToken = await this.generateTokenProvider.signIn<
+        Partial<GetUserData>
+      >(newUser.identifier, this.jwtConfiguration.accessTokenTTl, {
+        email: newUser.email,
+        role: newUser.role,
+      });
+
+      return {
+        newUser,
+        accessToken,
+      };
     } catch (CreateUserProviderError) {
       this.logger.error(
         `[CREATE-USER-PROVIDER-ERROR]: ----->

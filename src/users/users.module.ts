@@ -9,6 +9,9 @@ import { OtpTokenModule } from '../otp-token/otp-token.module';
 import { BullModule } from '@nestjs/bullmq';
 import { MAIL } from './constants/user-mail-job.constants';
 import { MailJobProcessor } from './jobs/mail-job.processor';
+import { ConfigModule } from '@nestjs/config';
+import jwtConfig from '../auth/config/jwt.config';
+import { JwtModule } from '@nestjs/jwt';
 
 @Module({
   imports: [
@@ -18,6 +21,8 @@ import { MailJobProcessor } from './jobs/mail-job.processor';
     BullModule.registerQueue({
       name: MAIL,
     }),
+    ConfigModule.forFeature(jwtConfig),
+    JwtModule.registerAsync(jwtConfig.asProvider()),
   ],
   providers: [UsersService, CreateUserProvider, MailJobProcessor],
   controllers: [UsersController],
