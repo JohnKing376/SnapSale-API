@@ -19,7 +19,7 @@ import { PaginationModule } from './common/pagination/pagination.module';
 import { DataResponseInterceptor } from './common/interceptors/data.response.interceptor';
 import { OtpTokenModule } from './otp-token/otp-token.module';
 import { MailModule } from './mail/mail.module';
-import { QueueModule } from './queue/queue.module';
+import { QueueModule } from './common/queue/queue.module';
 
 const ENV = process.env.NODE_ENV;
 
