@@ -1,0 +1,7 @@
+POST http://localhost:3000/otp-token/verify-token
+Content-Type: application/json
+Authorization: Bearer {{token}}}
+
+{
+  "token": 352821
+}
