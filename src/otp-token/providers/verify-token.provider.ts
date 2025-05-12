@@ -12,6 +12,7 @@ import OtpToken from '../entities/otp-token.entity';
 import { Repository } from 'typeorm';
 import { UsersService } from '../../users/providers/users.service';
 import { IVerifyToken } from '../interfaces/verify-token.interface';
+import { GetUserData } from '../../auth/interfaces/get-user-data.inteface';
 
 @Injectable()
 export class VerifyTokenProvider {
@@ -29,17 +30,20 @@ export class VerifyTokenProvider {
     private readonly usersService: UsersService,
   ) {}
 
-  public async verifyToken(verifyTokenOptions: IVerifyToken): Promise<boolean> {
-    const { email, token } = verifyTokenOptions;
+  public async verifyToken(
+    activeUser: GetUserData,
+    verifyTokenOptions: IVerifyToken,
+  ): Promise<boolean> {
+    const { token } = verifyTokenOptions;
 
-    const user = await this.usersService.findOneByEmail(email);
+    const user = await this.usersService.findOneByEmail(activeUser.email);
 
     if (!user) {
       throw new NotFoundException('user not found');
     }
 
     const otpToken = await this.otpTokenRepository.findOne({
-      where: { id: user.id },
+      where: { userId: user.id },
     });
 
     if (!otpToken) {
@@ -64,6 +68,7 @@ export class VerifyTokenProvider {
           'Something went wrong. Try again later',
         );
       }
+      //TODO: Update user entity file
     }
 
     return isValid;
