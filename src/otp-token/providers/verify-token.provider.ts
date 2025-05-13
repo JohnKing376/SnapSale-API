@@ -4,7 +4,6 @@ import {
   Injectable,
   NotFoundException,
   forwardRef,
-  InternalServerErrorException,
   Logger,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -13,6 +12,7 @@ import { Repository } from 'typeorm';
 import { UsersService } from '../../users/providers/users.service';
 import { IVerifyToken } from '../interfaces/verify-token.interface';
 import { GetUserData } from '../../auth/interfaces/get-user-data.inteface';
+import { OtpTokenService } from './otp-token.service';
 
 @Injectable()
 export class VerifyTokenProvider {
@@ -24,10 +24,15 @@ export class VerifyTokenProvider {
     @InjectRepository(OtpToken)
     private readonly otpTokenRepository: Repository<OtpToken>,
     /**
-     * Import User User
+     * Import User Service
      */
     @Inject(forwardRef(() => UsersService))
     private readonly usersService: UsersService,
+    /**
+     * Import  Otp-Token Service
+     */
+    @Inject(forwardRef(() => OtpTokenService))
+    private readonly otpTokenService: OtpTokenService,
   ) {}
 
   public async verifyToken(
@@ -61,20 +66,9 @@ export class VerifyTokenProvider {
       await this.usersService.updateUser(user.identifier, {
         isVerified: true,
       });
-      try {
-        await this.otpTokenRepository.update(otpToken.id, {
-          isUsed: true,
-          updatedAt: new Date(),
-        });
-      } catch (error) {
-        this.logger.log(
-          `[VERIFY-TOKEN-PROVIDER-ERROR]: -----> ${JSON.stringify(error, null, 2)}`,
-        );
-        throw new InternalServerErrorException(
-          'Something went wrong. Try again later',
-        );
-      }
-      //TODO: Create an update Token Provider
+      await this.otpTokenService.updateToken(otpToken.id, {
+        isUsed: true,
+      });
     }
 
     return isValid;

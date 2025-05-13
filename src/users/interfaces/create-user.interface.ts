@@ -10,4 +10,5 @@ export interface CreateUserOptions {
   googleId?: string;
   profileImg?: string;
   isVerified?: boolean;
+  updatedAt?: Date;
 }

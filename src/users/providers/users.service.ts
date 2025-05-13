@@ -91,8 +91,11 @@ export class UsersService {
       throw new NotFoundException('user not found');
     }
     try {
-      const updatedUser = this.userRepository.merge(user, updateUserOptions);
-      updatedUser.updatedAt = new Date();
+      const updatedUser = this.userRepository.merge(user, {
+        updatedAt: new Date(),
+        ...updateUserOptions,
+      });
+
       await this.userRepository.save(updatedUser);
       return await this.findOneById(updatedUser.id);
     } catch (error) {
