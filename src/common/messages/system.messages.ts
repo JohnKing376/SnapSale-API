@@ -102,3 +102,4 @@ export const SIGN_UP_SUCCESSFUL_PROCEED_TO_ACTIVATE_EMAIL =
   'Sign up Successful. Proceed to Email Activation';
 export const SIGN_UP_SUCCESSFUL_WELCOME_EMAIL =
   'Sign up Successful. Welcome to SnapSale Shop';
+export const SEND_RESET_TOKEN_EMAIL = 'Otp Token for Password Reset';
