@@ -1,10 +1,9 @@
 import {
-  BadRequestException,
+  forwardRef,
   Inject,
   Injectable,
-  NotFoundException,
-  forwardRef,
   Logger,
+  NotFoundException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import OtpToken from '../entities/otp-token.entity';
@@ -15,8 +14,8 @@ import { GetUserData } from '../../auth/interfaces/get-user-data.inteface';
 import { OtpTokenService } from './otp-token.service';
 
 @Injectable()
-export class VerifyTokenProvider {
-  private readonly logger = new Logger('VerifyTokenProvider');
+export class EmailVerifyTokenProvider {
+  private readonly logger = new Logger('EmailVerifyTokenProvider');
   constructor(
     /**
      * Import Otp Token Repository
@@ -35,7 +34,7 @@ export class VerifyTokenProvider {
     private readonly otpTokenService: OtpTokenService,
   ) {}
 
-  public async verifyToken(
+  public async verifyEmailToken(
     activeUser: GetUserData,
     verifyTokenOptions: IVerifyToken,
   ): Promise<boolean> {
@@ -47,27 +46,24 @@ export class VerifyTokenProvider {
       throw new NotFoundException('user not found');
     }
 
-    const otpToken = await this.otpTokenRepository.findOne({
-      where: { userId: user.id },
-    });
+    const otpToken = await this.otpTokenService.findTokenByUserId(user.id);
 
     if (!otpToken) {
-      throw new NotFoundException('Token associated with this user not found');
+      throw new NotFoundException('token not found');
     }
 
-    if (otpToken.expiresAt < new Date()) {
-      await this.otpTokenRepository.delete({ id: otpToken.id });
-      throw new BadRequestException('Token is expired');
-    }
-
-    const isValid = otpToken.token === token;
+    const isValid = await this.otpTokenService.isTokenValid({
+      otpToken,
+      token,
+    });
 
     if (isValid) {
-      await this.usersService.updateUser(user.identifier, {
-        isVerified: true,
-      });
       await this.otpTokenService.updateToken(otpToken.id, {
         isUsed: true,
+      });
+
+      await this.usersService.updateUser(user.identifier, {
+        isVerified: true,
       });
     }
 
