@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   Injectable,
   InternalServerErrorException,
   Logger,
@@ -7,7 +8,7 @@ import {
 import { ICreateToken } from '../interfaces/otp-token-interface';
 import OtpToken from '../entities/otp-token.entity';
 import { IVerifyToken } from '../interfaces/verify-token.interface';
-import { VerifyTokenProvider } from './verify-token.provider';
+import { EmailVerifyTokenProvider } from './email-verify-token.provider';
 import { CreateTokenProvider } from './create-token.provider';
 import { GetUserData } from '../../auth/interfaces/get-user-data.inteface';
 import { UpdateTokenOptions } from '../types/update-token-type';
@@ -25,7 +26,7 @@ export class OtpTokenService {
     /**
      * Import Verify Token Provider
      */
-    private readonly verifyTokenProvider: VerifyTokenProvider,
+    private readonly verifyTokenProvider: EmailVerifyTokenProvider,
     /**
      * Import Otp Token Repository
      */
@@ -69,17 +70,12 @@ export class OtpTokenService {
 
   /**
    * @public
-   * @description Method to verify OtpToken
-   * @param user
-   * @param verifyTokenOptions
-   * @returns boolean
+   * @description Method to find a token by its user id
+   * @param userId
    * @memberOf OtpTokenService
    */
-  public async verifyToken(
-    user: GetUserData,
-    verifyTokenOptions: IVerifyToken,
-  ): Promise<boolean> {
-    return await this.verifyTokenProvider.verifyToken(user, verifyTokenOptions);
+  public async findTokenByUserId(userId: number): Promise<OtpToken | null> {
+    return await this.otpTokenRepository.findOneBy({ userId });
   }
 
   /**
@@ -108,5 +104,62 @@ export class OtpTokenService {
         'Something went wrong while trying to update the token',
       );
     }
+  }
+
+  public async deleteToken(userId: number) {
+    //TODO: Fix?
+    const token = await this.findTokenByUserId(userId);
+
+    if (!token) {
+      throw new NotFoundException('user not found');
+    }
+
+    await this.otpTokenRepository.delete({ userId });
+  }
+
+  /**
+   * @public
+   * @description Method to validate an otpToken
+   * @param options
+   * @returns Promise<boolean>
+   * @memberOf OtpTokenService
+   */
+  public async isTokenValid(options: {
+    otpToken: OtpToken;
+    token: number;
+  }): Promise<boolean> {
+    const { otpToken, token } = options;
+
+    const otp = await this.findTokenById(otpToken.id);
+
+    if (!otp) {
+      throw new NotFoundException('token not found');
+    }
+
+    if (otp.expiresAt < new Date()) {
+      await this.otpTokenRepository.delete({ id: otp.id });
+      throw new BadRequestException('Token is expired, Request a new one');
+    }
+
+    return otp.token === token;
+  }
+
+  /**
+   * @public
+   * @description Method to verify OtpToken
+   * @param user
+   * @param verifyTokenOptions
+   * @returns boolean
+   * @memberOf OtpTokenService
+   */
+  //TODO
+  public async verifyEmailToken(
+    user: GetUserData,
+    verifyTokenOptions: IVerifyToken,
+  ): Promise<boolean> {
+    return await this.verifyTokenProvider.verifyEmailToken(
+      user,
+      verifyTokenOptions,
+    );
   }
 }
