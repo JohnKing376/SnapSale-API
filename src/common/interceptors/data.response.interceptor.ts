@@ -10,7 +10,6 @@ import { RESPONSE_META_KEY } from '../constants/response-meta.constants';
 import IResponseMeta from '../interfaces/response-meta.interface';
 import { IApiResponse } from '../interfaces/api-response.interface';
 
-//TODO
 @Injectable()
 export class DataResponseInterceptor<T>
   implements NestInterceptor<T, IApiResponse<T>>
@@ -27,20 +26,12 @@ export class DataResponseInterceptor<T>
       this.reflector.get<IResponseMeta>(
         RESPONSE_META_KEY,
         context.getHandler(),
-      ) ?? {};
+      ) ?? null;
 
     return next.handle().pipe(
       map((data) => {
-        if (
-          (data as IApiResponse<T>)?.statusCode &&
-          (data as IApiResponse<T>)?.message &&
-          (data as IApiResponse<T>)?.data
-        ) {
-          return data;
-        }
-
         return {
-          statusCode: meta.statusCode || 200,
+          statusCode: meta.statusCode,
           message: meta.message,
           data,
         };
