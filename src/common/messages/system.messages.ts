@@ -9,7 +9,10 @@ export const SystemMessages = {
     PRODUCT_DELETED: 'Product deleted successfully',
     LOGIN_SUCCESSFUL: 'Login successful',
     LOGOUT_SUCCESSFUL: 'Logout successful',
-    PASSWORD_RESET_SUCCESSFUL: 'Password reset successfully',
+    PASSWORD_CHANGE_SUCCESSFUL: 'Password changed successfully',
+    PASSWORD_RESET_EMAIL_SENT: 'Password reset email sent successfully',
+    PASSWORD_RESET_SUCCESSFUL: 'Password has been reset successfully',
+    PASSWORD_TOKEN_VERIFIED: 'Password reset token is valid',
     EMAIL_SENT: 'Email sent successfully',
     DATA_RETRIEVED: 'Data fetched successfully',
     PROFILE_UPDATED: 'Profile updated successfully',
@@ -99,3 +102,4 @@ export const SIGN_UP_SUCCESSFUL_PROCEED_TO_ACTIVATE_EMAIL =
   'Sign up Successful. Proceed to Email Activation';
 export const SIGN_UP_SUCCESSFUL_WELCOME_EMAIL =
   'Sign up Successful. Welcome to SnapSale Shop';
+export const SEND_RESET_TOKEN_EMAIL = 'Otp Token for Password Reset';

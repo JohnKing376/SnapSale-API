@@ -10,12 +10,14 @@ import { ConfigModule } from '@nestjs/config';
 import jwtConfig from './config/jwt.config';
 import { JwtModule } from '@nestjs/jwt';
 import { RefreshTokenProvider } from './providers/refresh-token.provider';
+import { PasswordModule } from './password-management/password.module';
 
 @Module({
   imports: [
     forwardRef(() => UsersModule),
     ConfigModule.forFeature(jwtConfig),
     JwtModule.registerAsync(jwtConfig.asProvider()),
+    PasswordModule,
   ],
   exports: [AuthService, HashingProvider, GenerateTokenProvider],
   providers: [

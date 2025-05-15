@@ -21,7 +21,7 @@ export class MailService {
      * Inject Mail Config
      */
     @Inject(mailConfig.KEY)
-    private readonly mailConfig: ConfigType<typeof MailConfig>,
+    private readonly mailConfiguration: ConfigType<typeof MailConfig>,
   ) {}
 
   private logger = new Logger('MailService');
@@ -32,8 +32,8 @@ export class MailService {
        * Destructure the email Options
        */
       const {
-        sendersEmail = this.mailConfig.business_mail,
-        sendersName = this.mailConfig.business_name,
+        sendersEmail = this.mailConfiguration.business_mail,
+        sendersName = this.mailConfiguration.business_name,
         receiversEmail,
         emailSubject,
         emailTemplate,

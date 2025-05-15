@@ -4,7 +4,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import OtpToken from './entities/otp-token.entity';
 import { UsersModule } from '../users/users.module';
 import { OtpTokenController } from './controllers/otp-token.controller';
-import { VerifyTokenProvider } from './providers/verify-token.provider';
+import { EmailVerifyTokenProvider } from './providers/email-verify-token.provider';
 import { CreateTokenProvider } from './providers/create-token.provider';
 import { GenerateOtpTokenProvider } from './providers/generate-otp-token.provider';
 
@@ -15,7 +15,7 @@ import { GenerateOtpTokenProvider } from './providers/generate-otp-token.provide
   ],
   providers: [
     OtpTokenService,
-    VerifyTokenProvider,
+    EmailVerifyTokenProvider,
     CreateTokenProvider,
     GenerateOtpTokenProvider,
   ],

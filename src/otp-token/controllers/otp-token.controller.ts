@@ -19,12 +19,12 @@ export class OtpTokenController {
     message: SystemMessages.SUCCESS.OTP_VERIFIED,
     statusCode: HttpStatus.OK,
   })
-  @Post('verify-token')
+  @Post('verify-email-token')
   @HttpCode(HttpStatus.OK)
   public async verifyToken(
     @GetUser() user: GetUserData,
     @Body() verifyTokenDto: VerifyTokenDto,
   ) {
-    return await this.otpTokenService.verifyToken(user, verifyTokenDto);
+    return await this.otpTokenService.verifyEmailToken(user, verifyTokenDto);
   }
 }

@@ -1,0 +1,7 @@
+POST http://localhost:3000/password-management/verify-reset-token
+Content-Type: application/json
+
+{
+  "email": "johnking1234@gmail.com",
+  "token": 305621
+}
