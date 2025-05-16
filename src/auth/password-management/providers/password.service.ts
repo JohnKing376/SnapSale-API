@@ -105,9 +105,7 @@ export class PasswordService {
       subject: SEND_RESET_TOKEN_EMAIL,
     } satisfies IMailOptions);
 
-    return {
-      email: user.email, //TODO
-    };
+    return;
   }
 
   public async verifyResetToken(verifyResetTokenOptions: IVerifyResetToken) {
@@ -167,6 +165,6 @@ export class PasswordService {
       password: hashedPassword,
     });
 
-    return {};
+    return;
   }
 }

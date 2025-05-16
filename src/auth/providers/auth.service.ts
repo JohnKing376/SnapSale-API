@@ -29,6 +29,7 @@ export class AuthService {
    * @param signInUser
    * @memberOf AuthService
    */
+
   public async signIn(signInUser: SignInUser) {
     return await this.signInProvider.signIn(signInUser);
   }
