@@ -1,14 +1,14 @@
 POST http://localhost:3000/products
 Content-Type: application/json
-Authorization: Bearer {{token}}}
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ0aGtjcnFjcWhpOGh4dTZiMmQzNGpteW8iLCJlbWFpbCI6ImpvaG5raW5nMTIzNEBnbWFpbC5jb20iLCJyb2xlIjoibWVyY2hhbnQiLCJpYXQiOjE3NDczODA3NTYsImV4cCI6MTc0NzM4NDM1NiwiYXVkIjoibG9jYWxob3N0OjMwMDAiLCJpc3MiOiJsb2NhbGhvc3Q6MzAwMCJ9.Z-Ri61N0nN5Oi1uLDKP3QjmUogQI34g3U72VGl4ITJs
 
 {
-  "name": "Amazon Forest",
-  "description": "A forest i can sell",
-  "price": 40000,
-  "quantity": 6,
+  "name": "Samsung A18",
+  "description": "Samsung A18",
+  "price": 100000,
+  "quantity": 2,
   "isAvailable": true,
-  "category": ["clothing"],
+  "category": ["electronics"],
   "condition": "used",
-  "region": "USA"
+  "region": "Nigeria"
 }

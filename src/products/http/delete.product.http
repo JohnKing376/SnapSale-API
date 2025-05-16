@@ -1,0 +1,3 @@
+DELETE http://localhost:3000/products/delete/{{identifier}}
+Content-Type: application/json
+Authorization: Bearer {token}
