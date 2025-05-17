@@ -1,14 +1,14 @@
 POST http://localhost:3000/products
 Content-Type: application/json
-Authorization: Bearer {{token}}}
+Authorization: Bearer {token}
 
 {
-  "name": "Amazon Forest",
-  "description": "A forest i can sell",
-  "price": 40000,
-  "quantity": 6,
+  "name": "Samsung A18",
+  "description": "Samsung A18",
+  "price": 100000,
+  "quantity": 2,
   "isAvailable": true,
-  "category": ["clothing"],
+  "category": ["electronics"],
   "condition": "used",
-  "region": "USA"
+  "region": "Nigeria"
 }

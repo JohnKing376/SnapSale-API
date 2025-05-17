@@ -6,6 +6,7 @@ import {
   Get,
   HttpCode,
   HttpStatus,
+  NotFoundException,
   Param,
   Patch,
   Post,
@@ -20,7 +21,10 @@ import { UpdateProductDto } from '../dtos/update-product.dto';
 import { PaginationQueryDto } from '../../common/pagination/dtos/pagination-query.dto';
 import { ResponseMeta } from '../../common/decorators/response-meta.decorator';
 import { SystemMessages } from '../../common/messages/system.messages';
+import { Role } from '../../auth/decorators/role.decorator';
+import { RoleType } from '../../auth/enums/role-type.enums';
 
+@Role(RoleType.MERCHANT, RoleType.ADMIN)
 @Controller('products')
 @UseInterceptors(ClassSerializerInterceptor)
 export class ProductsController {
@@ -48,9 +52,16 @@ export class ProductsController {
     message: SystemMessages.SUCCESS.FETCHED_PRODUCT,
     statusCode: HttpStatus.OK,
   })
-  @Get('one-product/:identifier')
+  @Get('product/:identifier')
   public async getProduct(@Param() identifier: string) {
-    return await this.productsService.findProductByIdentifier(identifier);
+    const product =
+      await this.productsService.findProductByIdentifier(identifier);
+
+    if (!product) {
+      throw new NotFoundException('product not found');
+    }
+
+    return product;
   }
 
   @ResponseMeta({
@@ -69,7 +80,7 @@ export class ProductsController {
     message: SystemMessages.SUCCESS.PRODUCT_UPDATED,
     statusCode: HttpStatus.OK,
   })
-  @Patch('update/:identifier')
+  @Patch('update-product/:identifier')
   public async updateProducts(
     @Body() updateProductDto: UpdateProductDto,
     @Param('identifier') identifier: string,

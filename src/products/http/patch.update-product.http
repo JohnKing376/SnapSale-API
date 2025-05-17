@@ -1,0 +1,11 @@
+PATCH http://localhost:3000/products/update-product/{{identifier}}
+Content-Type: application/json
+Authorization: Bearer {token}
+
+
+{
+  "name": "Tom Hawks",
+  "description": "A Boxer for Kings",
+  "condition": "brand-new",
+  "category": ["clothing"]
+}

@@ -3,6 +3,7 @@ import { AbstractModel } from '../../common/models/abstract-model.entity';
 import User from '../../users/entities/user.entity';
 import { ProductCondition } from '../enums/product-condition.enum';
 import { ProductCategory } from '../enums/category.enum';
+import { Exclude } from 'class-transformer';
 
 @Entity()
 export class Product extends AbstractModel {
@@ -41,6 +42,7 @@ export class Product extends AbstractModel {
   @Column('json', { nullable: true })
   productImages?: string[];
 
+  @Exclude()
   @Column()
   merchantId: number | null;
 

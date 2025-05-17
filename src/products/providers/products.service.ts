@@ -1,4 +1,9 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  Injectable,
+  InternalServerErrorException,
+  Logger,
+  NotFoundException,
+} from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { Product } from '../entities/product.entity';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -14,6 +19,7 @@ import { UsersService } from '../../users/providers/users.service';
 
 @Injectable()
 export class ProductsService {
+  private readonly logger = new Logger('ProductsService');
   constructor(
     /**
      * Inject Product Repository
@@ -114,16 +120,25 @@ export class ProductsService {
    * @memberOf ProductsService
    */
 
-  public async deleteProduct(identifier: string): Promise<string> {
+  public async deleteProduct(identifier: string) {
     const product = await this.findProductByIdentifier(identifier);
 
     if (!product) {
       throw new NotFoundException('product not found');
     }
 
-    await this.productRepository.delete({ identifier });
+    try {
+      await this.productRepository.delete({ identifier });
+    } catch (error) {
+      this.logger.error(
+        `[DELETE-PRODUCT-ERROR]: ${JSON.stringify(error, null, 2)}`,
+      );
+      throw new InternalServerErrorException(
+        'Something went wrong while trying to delete the product',
+      );
+    }
 
-    return `Product with identifier ${identifier} was deleted successfully.`;
+    return null;
   }
 
   /**

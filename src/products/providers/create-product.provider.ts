@@ -39,8 +39,9 @@ export class CreateProductProvider {
 
     try {
       const newProduct = this.productRepository.create({
+        merchantId: merchantId.id,
+        createdAt: new Date(),
         ...createProductOptions,
-        merchant: merchantId,
       });
 
       return await this.productRepository.save(newProduct);

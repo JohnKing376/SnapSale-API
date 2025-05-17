@@ -29,10 +29,10 @@ export class UpdateProductProvider {
     if (!product) throw new NotFoundException('product not found');
 
     try {
-      await this.productRepository.update(
-        { identifier },
-        { ...updateProductOptions },
-      );
+      await this.productRepository.update(product.id, {
+        updatedAt: new Date(),
+        ...updateProductOptions,
+      });
 
       return this.productRepository.findOne({
         where: { identifier: product.identifier },
