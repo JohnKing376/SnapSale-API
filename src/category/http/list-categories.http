@@ -1,0 +1,2 @@
+GET http://localhost:3000/category/list-categories
+Content-Type: application/json

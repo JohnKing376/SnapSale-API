@@ -12,7 +12,7 @@ import { UsersService } from '../providers/users.service';
 import { Auth } from '../../auth/decorators/auth.decorator';
 import { AuthType } from '../../auth/enums/auth-type.enums';
 import { ResponseMeta } from '../../common/decorators/response-meta.decorator';
-import { SystemMessages } from '../../common/messages/system.messages';
+import { SystemMessages } from '../../common/helpers/messages/system.messages';
 import { GetUser } from '../../auth/decorators/get-user.decorator';
 import { GetUserData } from '../../auth/interfaces/get-user-data.inteface';
 import { UpdateUserDto } from '../dtos/update-user.dto';

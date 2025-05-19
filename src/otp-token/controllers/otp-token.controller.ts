@@ -2,7 +2,7 @@ import { Body, Controller, HttpCode, HttpStatus, Post } from '@nestjs/common';
 import { OtpTokenService } from '../providers/otp-token.service';
 import VerifyTokenDto from '../dtos/verify-token.dto';
 import { ResponseMeta } from '../../common/decorators/response-meta.decorator';
-import { SystemMessages } from '../../common/messages/system.messages';
+import { SystemMessages } from '../../common/helpers/messages/system.messages';
 import { GetUser } from '../../auth/decorators/get-user.decorator';
 import { GetUserData } from '../../auth/interfaces/get-user-data.inteface';
 

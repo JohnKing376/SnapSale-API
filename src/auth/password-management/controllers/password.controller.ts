@@ -13,7 +13,7 @@ import { GetUserData } from '../../interfaces/get-user-data.inteface';
 import { ChangePasswordDto } from '../dtos/change-password.dto';
 import { PasswordService } from '../providers/password.service';
 import { ResponseMeta } from '../../../common/decorators/response-meta.decorator';
-import { SystemMessages } from '../../../common/messages/system.messages';
+import { SystemMessages } from '../../../common/helpers/messages/system.messages';
 import { GenerateResetTokenDto } from '../dtos/generate-reset-token.dto';
 import { AuthType } from '../../enums/auth-type.enums';
 import { Auth } from '../../decorators/auth.decorator';

@@ -17,7 +17,7 @@ import { OtpTokenType } from '../../../otp-token/enums/otp-token-type.enums';
 import {
   SEND_RESET_TOKEN_EMAIL,
   SystemMessages,
-} from '../../../common/messages/system.messages';
+} from '../../../common/helpers/messages/system.messages';
 import { PASSWORD_RESET_MAIL } from '../constants/password-management-constants';
 import { IVerifyResetToken } from '../interfaces/verify-reset-token.interface';
 import { GenerateTokenProvider } from '../../providers/generate-token.provider';
@@ -118,6 +118,7 @@ export class PasswordService {
     }
 
     const otpToken = await this.otpTokenService.findTokenByUserId(user.id);
+
 
     if (!otpToken) {
       throw new NotFoundException('token not found');
