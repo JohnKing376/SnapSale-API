@@ -14,7 +14,7 @@ import { UpdateProducts } from '../types/update-products.types';
 import { UpdateProductProvider } from './update-product.provider';
 import { PaginationProvider } from '../../common/pagination/providers/pagination.provider';
 import { Pagination } from '../../common/pagination/interfaces/pagination.interface';
-import { PaginateQuery } from '../interfaces/paginate-query.interface';
+import { PaginateQuery } from '../../common/pagination/interfaces/paginate-query.interface';
 import { UsersService } from '../../users/providers/users.service';
 
 @Injectable()
@@ -152,9 +152,9 @@ export class ProductsService {
     paginateQueryOptions: PaginateQuery,
     user: GetUserData,
   ): Promise<Pagination<Product>> {
-    const auth_user = await this.usersService.findUserByIdentifier(user.sub);
+    const authUser = await this.usersService.findUserByIdentifier(user.sub);
 
-    if (!auth_user) {
+    if (!authUser) {
       throw new NotFoundException('user not found');
     }
 
@@ -164,9 +164,10 @@ export class ProductsService {
         limit: paginateQueryOptions.limit,
       },
       this.productRepository,
-      { merchantId: auth_user.id },
+      { merchantId: authUser.id },
       {
         merchant: true,
+        category: true,
       },
     );
   }

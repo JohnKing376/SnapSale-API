@@ -1,4 +1,3 @@
-import { ProductCategory } from '../enums/category.enum';
 import { ProductCondition } from '../enums/product-condition.enum';
 
 export interface ICreateProduct {
@@ -8,7 +7,7 @@ export interface ICreateProduct {
   quantity: number;
   productImage?: string[];
   isAvailable: boolean;
-  category: ProductCategory[];
+  categoryId: number;
   condition: ProductCondition;
   region: string;
 }

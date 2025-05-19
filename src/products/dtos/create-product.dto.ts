@@ -2,6 +2,7 @@ import {
   IsArray,
   IsBoolean,
   IsEnum,
+  IsInt,
   IsNotEmpty,
   IsNumber,
   IsOptional,
@@ -10,7 +11,6 @@ import {
   MinLength,
 } from 'class-validator';
 import { ProductCondition } from '../enums/product-condition.enum';
-import { ProductCategory } from '../enums/category.enum';
 
 export class CreateProductDto {
   @IsNotEmpty()
@@ -41,9 +41,8 @@ export class CreateProductDto {
   isAvailable: boolean;
 
   @IsNotEmpty()
-  @IsArray()
-  @IsEnum(ProductCategory, { each: true })
-  category: ProductCategory[];
+  @IsInt()
+  categoryId: number;
 
   @IsNotEmpty()
   @IsEnum(ProductCondition)
