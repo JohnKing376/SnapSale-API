@@ -2,8 +2,8 @@ import { Column, Entity, ManyToOne } from 'typeorm';
 import { AbstractModel } from '../../common/models/abstract-model.entity';
 import User from '../../users/entities/user.entity';
 import { ProductCondition } from '../enums/product-condition.enum';
-import { ProductCategory } from '../enums/category.enum';
 import { Exclude } from 'class-transformer';
+import Category from '../../category/entities/category.entity';
 
 @Entity()
 export class Product extends AbstractModel {
@@ -25,12 +25,6 @@ export class Product extends AbstractModel {
   isAvailable: boolean;
 
   @Column({
-    type: 'enum',
-    enum: ProductCategory,
-  })
-  category: ProductCategory[];
-
-  @Column({
     enum: ProductCondition,
     type: 'enum',
   })
@@ -46,6 +40,12 @@ export class Product extends AbstractModel {
   @Column()
   merchantId: number | null;
 
+  @Column()
+  categoryId: number;
+
   @ManyToOne(() => User, (user) => user.products)
   merchant: User;
+
+  @ManyToOne(() => Category, (category) => category.products)
+  category: Category;
 }

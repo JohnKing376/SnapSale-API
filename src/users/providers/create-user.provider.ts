@@ -23,7 +23,7 @@ import { IMailOptions } from '../interfaces/email-queue.job.interface';
 import {
   SIGN_UP_SUCCESSFUL_PROCEED_TO_ACTIVATE_EMAIL,
   SIGN_UP_SUCCESSFUL_WELCOME_EMAIL,
-} from '../../common/messages/system.messages';
+} from '../../common/helpers/messages/system.messages';
 import { GenerateTokenProvider } from '../../auth/providers/generate-token.provider';
 import { ConfigType } from '@nestjs/config';
 import jwtConfig from '../../auth/config/jwt.config';

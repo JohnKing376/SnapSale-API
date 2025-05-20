@@ -10,16 +10,16 @@ import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
 import jwtConfig from './auth/config/jwt.config';
 import { JwtModule } from '@nestjs/jwt';
-import { APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
+import { APP_GUARD } from '@nestjs/core';
 import { AuthenticationGuard } from './auth/guards/authentication/authentication.guard';
 import { AuthTypeGuard } from './auth/guards/authentication/auth-type.guard';
 import { ProductsModule } from './products/products.module';
 import { SnakeNamingStrategy } from 'typeorm-naming-strategies';
 import { PaginationModule } from './common/pagination/pagination.module';
-import { DataResponseInterceptor } from './common/interceptors/data.response.interceptor';
 import { OtpTokenModule } from './otp-token/otp-token.module';
 import { MailModule } from './mail/mail.module';
 import { QueueModule } from './common/queue/queue.module';
+import { CategoryModule } from './category/category.module';
 
 const ENV = process.env.NODE_ENV;
 
@@ -59,6 +59,7 @@ const ENV = process.env.NODE_ENV;
     OtpTokenModule,
     MailModule,
     QueueModule,
+    CategoryModule,
   ],
   controllers: [AppController],
   providers: [

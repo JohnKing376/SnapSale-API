@@ -8,7 +8,7 @@ Authorization: Bearer {token}
   "price": 100000,
   "quantity": 2,
   "isAvailable": true,
-  "category": ["electronics"],
+  "categoryId": 1,
   "condition": "used",
   "region": "Nigeria"
 }

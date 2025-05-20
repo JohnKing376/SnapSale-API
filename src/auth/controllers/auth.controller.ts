@@ -13,7 +13,7 @@ import { RefreshTokenDto } from '../dtos/refresh-token-dto';
 import { Auth } from '../decorators/auth.decorator';
 import { AuthType } from '../enums/auth-type.enums';
 import { ResponseMeta } from '../../common/decorators/response-meta.decorator';
-import { SystemMessages } from '../../common/messages/system.messages';
+import { SystemMessages } from '../../common/helpers/messages/system.messages';
 
 @Controller('auth')
 @UseInterceptors(ClassSerializerInterceptor)

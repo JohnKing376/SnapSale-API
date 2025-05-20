@@ -47,6 +47,7 @@ export const SystemMessages = {
     TOKEN_GENERATED: 'Token generated successfully',
     TOKEN_REFRESHED: 'Token refreshed successfully',
     TOKEN_VALID: 'Token is valid',
+    FETCHED_RESOURCE: 'Fetched List'
   },
 
   ERROR: {

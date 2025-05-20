@@ -20,7 +20,7 @@ import { GetUserData } from '../../auth/interfaces/get-user-data.inteface';
 import { UpdateProductDto } from '../dtos/update-product.dto';
 import { PaginationQueryDto } from '../../common/pagination/dtos/pagination-query.dto';
 import { ResponseMeta } from '../../common/decorators/response-meta.decorator';
-import { SystemMessages } from '../../common/messages/system.messages';
+import { SystemMessages } from '../../common/helpers/messages/system.messages';
 import { Role } from '../../auth/decorators/role.decorator';
 import { RoleType } from '../../auth/enums/role-type.enums';
 
