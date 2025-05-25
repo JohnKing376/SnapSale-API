@@ -1,6 +1,5 @@
 import {
   BadRequestException,
-  Inject,
   Injectable,
   InternalServerErrorException,
   Logger,
@@ -25,9 +24,6 @@ import {
   SIGN_UP_SUCCESSFUL_WELCOME_EMAIL,
 } from '../../common/helpers/messages/system.messages';
 import { GenerateTokenProvider } from '../../auth/providers/generate-token.provider';
-import { ConfigType } from '@nestjs/config';
-import jwtConfig from '../../auth/config/jwt.config';
-import JwtConfig from '../../auth/config/jwt.config';
 
 @Injectable()
 export class CreateUserProvider {
@@ -58,12 +54,6 @@ export class CreateUserProvider {
      * Import Generate Token Provider
      */
     private readonly generateTokenProvider: GenerateTokenProvider,
-
-    /**
-     * Import Jwt Config
-     */
-    @Inject(jwtConfig.KEY)
-    private readonly jwtConfiguration: ConfigType<typeof JwtConfig>,
   ) {}
 
   public async createUser(createUserOptions: CreateUserOptions): Promise<{
