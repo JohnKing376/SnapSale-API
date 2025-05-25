@@ -20,6 +20,7 @@ import { OtpTokenModule } from './otp-token/otp-token.module';
 import { MailModule } from './mail/mail.module';
 import { QueueModule } from './common/queue/queue.module';
 import { CategoryModule } from './category/category.module';
+import { CartModule } from './cart/cart.module';
 
 const ENV = process.env.NODE_ENV;
 
@@ -60,6 +61,7 @@ const ENV = process.env.NODE_ENV;
     MailModule,
     QueueModule,
     CategoryModule,
+    CartModule,
   ],
   controllers: [AppController],
   providers: [
