@@ -1,0 +1,9 @@
+DELETE http://localhost:3000/cart/remove-item
+Content-Type: application/json
+Authorization: Bearer {token}
+
+
+{
+  "productId": number,
+  "quantity": number
+}
