@@ -22,5 +22,6 @@ import { RoleTypeGuard } from '../auth/guards/authentication/role-type.guard';
   ],
   controllers: [ProductsController],
   imports: [TypeOrmModule.forFeature([Product]), UsersModule, PaginationModule],
+  exports: [ProductsService],
 })
 export class ProductsModule {}
