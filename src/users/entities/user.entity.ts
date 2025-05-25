@@ -1,8 +1,16 @@
 import { AbstractModel } from 'src/common/models/abstract-model.entity';
-import { Entity, Column, OneToMany, BeforeInsert, BeforeUpdate } from 'typeorm';
+import {
+  Entity,
+  Column,
+  OneToMany,
+  BeforeInsert,
+  BeforeUpdate,
+  OneToOne,
+} from 'typeorm';
 import { Product } from '../../products/entities/product.entity';
 import { Exclude } from 'class-transformer';
 import { RoleType } from '../../auth/enums/role-type.enums';
+import Cart from '../../cart/entities/cart.entity';
 
 @Entity({
   name: 'users',
@@ -85,4 +93,7 @@ export default class User extends AbstractModel {
   generateFullName() {
     this.fullName = `${this.lastName} ${this.firstName}`;
   }
+
+  @OneToOne(() => Cart, (cart) => cart.user)
+  cart: Cart;
 }

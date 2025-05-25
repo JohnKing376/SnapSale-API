@@ -56,3 +56,7 @@ export function DELETE_RESOURCE_SUCCESSFUL(resourceName = 'Resource') {
 export function DELETE_RESOURCE_FAIL(resourceName = 'Resource') {
   return `${resourceName} Delete Fail`;
 }
+
+export function ADD_RESOURCE_SUCCESSFUL(resourceName = 'Resource') {
+  return `${resourceName} Added Successfully`;
+}

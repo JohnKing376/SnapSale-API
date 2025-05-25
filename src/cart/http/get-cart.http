@@ -1,0 +1,3 @@
+GET http://localhost:3000/cart/get-items
+Content-Type: application/json
+Authorization: Bearer {token}
