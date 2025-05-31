@@ -1,4 +1,4 @@
-import { ClassSerializerInterceptor, forwardRef, Module } from '@nestjs/common';
+import { ClassSerializerInterceptor, Module } from '@nestjs/common';
 import { CartService } from './providers/cart.service';
 import { CartItemModule } from './cart-item/cart-item.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
@@ -8,6 +8,7 @@ import { CartController } from './controllers/cart.controller';
 import Cart from './entities/cart.entity';
 import { APP_INTERCEPTOR } from '@nestjs/core';
 import { PaginationModule } from '../common/pagination/pagination.module';
+import { OrderModule } from '../order/order.module';
 
 @Module({
   providers: [
@@ -20,8 +21,9 @@ import { PaginationModule } from '../common/pagination/pagination.module';
   imports: [
     CartItemModule,
     TypeOrmModule.forFeature([Cart]),
-    forwardRef(() => ProductsModule),
-    forwardRef(() => UsersModule),
+    ProductsModule,
+    UsersModule,
+    OrderModule,
     PaginationModule,
   ],
   controllers: [CartController],

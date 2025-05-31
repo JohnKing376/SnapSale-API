@@ -17,6 +17,7 @@ import {
 } from '../interfaces/cart.interfaces';
 import { PaginationProvider } from '../../common/pagination/providers/pagination.provider';
 import { PaginateQuery } from '../../common/pagination/interfaces/paginate-query.interface';
+import { OrderService } from '../../order/providers/order.service';
 
 @Injectable()
 export class CartService {
@@ -31,6 +32,8 @@ export class CartService {
     private readonly cartItemService: CartItemService,
 
     private readonly paginateProvider: PaginationProvider,
+
+    private readonly orderService: OrderService,
   ) {}
 
   private async getCartByUserId(userId: number): Promise<Cart | null> {
@@ -80,7 +83,7 @@ export class CartService {
   public async addItemToCart(
     authUser: GetUserData,
     addToCartOptions: AddItemToCart,
-  ): Promise<Cart> {
+  ): Promise<Cart | null> {
     const { quantity, productId } = addToCartOptions;
 
     const cart = await this.getOrCreateCart(authUser);
@@ -99,7 +102,7 @@ export class CartService {
       quantity,
     });
 
-    return await this.getTotalPrice(authUser);
+    return await this.getCartById(cart.id);
   }
 
   /**
@@ -112,12 +115,10 @@ export class CartService {
   public async removeOneCartItem(
     authUser: GetUserData,
     options: RemoveItemFromCart,
-  ): Promise<Cart> {
+  ) {
     const { productId, quantity } = options;
 
     const cart = await this.getOrCreateCart(authUser);
-
-    console.log(cart);
 
     await this.cartItemService.removeItem({
       productId,
@@ -125,7 +126,7 @@ export class CartService {
       quantity,
     });
 
-    return await this.getTotalPrice(authUser);
+    await this.getTotalPrice(cart.id);
   }
 
   /**
@@ -134,21 +135,25 @@ export class CartService {
    * @param authUser - The authenticated user's data.
    * @returns A promise that resolves when all items are removed from the cart.
    */
-  public async deleteItemsFromCart(authUser: GetUserData): Promise<Cart> {
+  public async deleteItemsFromCart(authUser: GetUserData) {
     const cart = await this.getOrCreateCart(authUser);
-    await this.cartItemService.removeAllItems(cart.id);
-    return this.getTotalPrice(authUser);
+    await this.getTotalPrice(cart.id);
+    return await this.cartItemService.removeAllItems(cart.id);
   }
 
   /**
    * @description
    * Calculates the total price of all items in the authenticated user's cart.
    * Updates the cart's total price in the database.
-   * @param authUser - The authenticated user's data.
-   * @returns A promise that resolves to the updated cart with the total price.
+   * @param cartId - The cart id.
    */
-  public async getTotalPrice(authUser: GetUserData): Promise<Cart> {
-    const cart = await this.getOrCreateCart(authUser);
+  public async getTotalPrice(cartId: number) {
+    const cart = await this.getCartById(cartId);
+
+    if (!cart) {
+      throw new NotFoundException('cart not found');
+    }
+
     const items = await this.cartItemService.getAllItems(cart.id);
 
     let cartPrice = 0;
@@ -158,16 +163,8 @@ export class CartService {
     }
 
     await this.cartRepository.update(cart.id, {
-      totalPrice: cartPrice,
+      total: cartPrice,
     });
-
-    const updatedCart = await this.cartRepository.findOneBy({ id: cart.id });
-
-    if (!updatedCart) {
-      throw new InternalServerErrorException('Cart not found after update.');
-    }
-
-    return updatedCart;
   }
 
   /**
@@ -201,5 +198,33 @@ export class CartService {
         user: true,
       },
     );
+  }
+
+  /**
+   * @description
+   * Method to check out the authenticated user's cart
+   * @param activeUser
+   * @returns A promise of the user's order
+   */
+  public async checkout(activeUser: GetUserData) {
+    const cart = await this.getOrCreateCart(activeUser);
+
+    const items = await this.cartItemService.getAllItems(cart.id);
+
+    if (!items || items.length === 0) {
+      throw new NotFoundException(
+        'cart items not found. cannot checkout an empty cart',
+      );
+    }
+
+    const order = await this.orderService.createOrder(activeUser, { items });
+
+    await this.cartItemService.removeAllItems(cart.id);
+
+    return order;
+  }
+
+  private async getCartById(cartId: number): Promise<Cart | null> {
+    return await this.cartRepository.findOneBy({ id: cartId });
   }
 }

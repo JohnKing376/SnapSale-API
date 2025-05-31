@@ -14,6 +14,7 @@ import { ResponseMeta } from '../../common/decorators/response-meta.decorator';
 import {
   ADD_RESOURCE_SUCCESSFUL,
   DELETE_RESOURCE_SUCCESSFUL,
+  OPERATION_SUCCESSFUL,
   RESOURCE_LIST_FETCHED_SUCCESSFULLY,
 } from '../../common/helpers/messages/custom.messages';
 import { GetUser } from '../../auth/decorators/get-user.decorator';
@@ -76,5 +77,14 @@ export class CartController {
     //return plainToInstance(CartResponseDto, cart, {
     //excludeExtraneousValues: true,
     //});
+  }
+
+  @ResponseMeta({
+    message: OPERATION_SUCCESSFUL('Cart Checkout'),
+    statusCode: HttpStatus.CREATED,
+  })
+  @Post('checkout')
+  public async checkout(@GetUser() activeUser: GetUserData) {
+    return await this.cartService.checkout(activeUser);
   }
 }
