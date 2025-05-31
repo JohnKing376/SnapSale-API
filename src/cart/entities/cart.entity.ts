@@ -14,7 +14,7 @@ export default class Cart extends AbstractModel {
     nullable: true,
     default: 0,
   })
-  totalPrice: number;
+  total: number;
 
   @OneToMany(() => CartItem, (items) => items.cart, {
     eager: true,

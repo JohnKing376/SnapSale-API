@@ -11,6 +11,7 @@ import { Product } from '../../products/entities/product.entity';
 import { Exclude } from 'class-transformer';
 import { RoleType } from '../../auth/enums/role-type.enums';
 import Cart from '../../cart/entities/cart.entity';
+import Order from '../../order/entities/order.entity';
 
 @Entity({
   name: 'users',
@@ -96,4 +97,7 @@ export default class User extends AbstractModel {
 
   @OneToOne(() => Cart, (cart) => cart.user)
   cart: Cart;
+
+  @OneToMany(() => Order, (order) => order.user)
+  orders: Order[];
 }
