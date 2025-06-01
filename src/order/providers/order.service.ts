@@ -2,7 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import Order from '../entities/order.entity';
-import { GetUserData } from '../../auth/interfaces/get-user-data.inteface';
+import { GetUserData } from '../../common/interfaces/get-user-data.inteface';
 import { CreateOrder } from '../interfaces/create-order.interface';
 import { OrderItemService } from './order-item.service';
 import { UsersService } from '../../users/providers/users.service';
@@ -54,6 +54,12 @@ export class OrderService {
     return await this.getOrderById(order.id);
   }
 
+  /**
+   * @description
+   * Method to list pending order items for the authenticated user
+   * @param activeUser
+   * @returns A promise of OrderItem[]
+   */
   public async listPendingOrderItems(
     activeUser: GetUserData,
   ): Promise<OrderItem[]> {
@@ -72,6 +78,12 @@ export class OrderService {
     return await this.orderItemService.listOrderItems(order.id);
   }
 
+  /**
+   * @description
+   * Method to list all orders for the authenticated user
+   * @param activeUser
+   * @returns A promise of Order[]
+   */
   public async listOrders(activeUser: GetUserData): Promise<Order[]> {
     const user = await this.usersService.findUserByIdentifier(activeUser.sub);
 
@@ -80,6 +92,12 @@ export class OrderService {
     return await this.orderRepository.findBy({ userId: user.id });
   }
 
+  /**
+   * @description
+   * Method to list a pending order for the authenticated user
+   * @param activeUser
+   * @returns A promise of Order | null
+   */
   public async listPendingOrder(
     activeUser: GetUserData,
   ): Promise<Order | null> {
@@ -94,10 +112,22 @@ export class OrderService {
     });
   }
 
+  /**
+   * @description
+   * Method to get an order by its ID
+   * @param orderId
+   * @returns A promise of Order | null
+   */
   private async getOrderById(orderId: number): Promise<Order | null> {
     return await this.orderRepository.findOneBy({ id: orderId });
   }
 
+  /**
+   * @description
+   * Method to get the total of an order by its ID
+   * @param orderId
+   * @returns A promise of void
+   */
   public async getOrderTotal(orderId: number) {
     const order = await this.getOrderById(orderId);
 

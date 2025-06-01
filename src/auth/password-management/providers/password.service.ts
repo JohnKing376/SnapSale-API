@@ -17,12 +17,12 @@ import { OtpTokenType } from '../../../otp-token/enums/otp-token-type.enums';
 import {
   SEND_RESET_TOKEN_EMAIL,
   SystemMessages,
-} from '../../../common/helpers/messages/system.messages';
+} from '../../../common/utils/helpers/messages/system.messages';
 import { PASSWORD_RESET_MAIL } from '../constants/password-management-constants';
 import { IVerifyResetToken } from '../interfaces/verify-reset-token.interface';
 import { GenerateTokenProvider } from '../../providers/generate-token.provider';
 import { IResetPassword } from '../interfaces/reset-password.interface';
-import { GetUserData } from '../../interfaces/get-user-data.inteface';
+import { GetUserData } from '../../../common/interfaces/get-user-data.inteface';
 
 @Injectable()
 export class PasswordService {

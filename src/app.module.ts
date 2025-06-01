@@ -17,8 +17,8 @@ import { ProductsModule } from './products/products.module';
 import { SnakeNamingStrategy } from 'typeorm-naming-strategies';
 import { PaginationModule } from './common/pagination/pagination.module';
 import { OtpTokenModule } from './otp-token/otp-token.module';
-import { MailModule } from './mail/mail.module';
-import { QueueModule } from './common/queue/queue.module';
+import { MailModule } from './infrastructure/mail/mail.module';
+import { QueueModule } from './infrastructure/queue/queue.module';
 import { CategoryModule } from './category/category.module';
 import { CartModule } from './cart/cart.module';
 

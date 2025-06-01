@@ -8,7 +8,7 @@ import { Reflector } from '@nestjs/core';
 import { ROLE_TYPE_KEY } from '../../constants/auth.constants';
 import { RoleType } from '../../enums/role-type.enums';
 import ActiveUser from '../../interfaces/request-active-user.interface';
-import { GetUserData } from '../../interfaces/get-user-data.inteface';
+import { GetUserData } from '../../../common/interfaces/get-user-data.inteface';
 
 @Injectable()
 export class RoleTypeGuard implements CanActivate {

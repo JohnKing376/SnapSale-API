@@ -1,11 +1,11 @@
 import { Processor, WorkerHost } from '@nestjs/bullmq';
 import { UsersService } from '../../../users/providers/users.service';
-import { MailService } from '../../../mail/providers/mail.service';
+import { MailService } from '../../../infrastructure/mail/providers/mail.service';
 import { Job } from 'bullmq';
 import { IMailOptions } from '../../../users/interfaces/email-queue.job.interface';
 import { Logger, NotFoundException } from '@nestjs/common';
-import { IEmailOptions } from '../../../mail/interfaces/send-email.interface';
-import { EmailType } from '../../../mail/enums/mail-type.enums';
+import { IEmailOptions } from '../../../infrastructure/mail/interfaces/send-email.interface';
+import { EmailType } from '../../../infrastructure/mail/enums/mail-type.enums';
 import { PASSWORD_RESET_MAIL } from '../constants/password-management-constants';
 
 @Processor(PASSWORD_RESET_MAIL)

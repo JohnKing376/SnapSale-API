@@ -10,7 +10,7 @@ import OtpToken from '../entities/otp-token.entity';
 import { IVerifyToken } from '../interfaces/verify-token.interface';
 import { EmailVerifyTokenProvider } from './email-verify-token.provider';
 import { CreateTokenProvider } from './create-token.provider';
-import { GetUserData } from '../../auth/interfaces/get-user-data.inteface';
+import { GetUserData } from '../../common/interfaces/get-user-data.inteface';
 import { UpdateTokenOptions } from '../types/update-token-type';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';

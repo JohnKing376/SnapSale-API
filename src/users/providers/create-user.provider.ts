@@ -22,7 +22,7 @@ import { IMailOptions } from '../interfaces/email-queue.job.interface';
 import {
   SIGN_UP_SUCCESSFUL_PROCEED_TO_ACTIVATE_EMAIL,
   SIGN_UP_SUCCESSFUL_WELCOME_EMAIL,
-} from '../../common/helpers/messages/system.messages';
+} from '../../common/utils/helpers/messages/system.messages';
 import { GenerateTokenProvider } from '../../auth/providers/generate-token.provider';
 
 @Injectable()

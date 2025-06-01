@@ -12,7 +12,7 @@ import { ConfigType } from '@nestjs/config';
 import JwtConfig from '../config/jwt.config';
 import { UsersService } from '../../users/providers/users.service';
 import { RefreshTokenDto } from '../dtos/refresh-token-dto';
-import { GetUserData } from '../interfaces/get-user-data.inteface';
+import { GetUserData } from '../../common/interfaces/get-user-data.inteface';
 import { GenerateTokenProvider } from './generate-token.provider';
 
 @Injectable()

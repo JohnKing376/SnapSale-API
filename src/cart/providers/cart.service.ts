@@ -7,7 +7,7 @@ import {
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import Cart from '../entities/cart.entity';
-import { GetUserData } from '../../auth/interfaces/get-user-data.inteface';
+import { GetUserData } from '../../common/interfaces/get-user-data.inteface';
 import { UsersService } from '../../users/providers/users.service';
 import { ProductsService } from '../../products/providers/products.service';
 import { CartItemService } from '../cart-item/providers/cart-item.service';
@@ -224,7 +224,14 @@ export class CartService {
     return order;
   }
 
+  /**
+   * @description
+   * Retrieves a cart by its ID.
+   * @param cartId - The ID of the cart to retrieve.
+   * @returns A promise that resolves to the cart or null if not found.
+   */  
   private async getCartById(cartId: number): Promise<Cart | null> {
     return await this.cartRepository.findOneBy({ id: cartId });
   }
+  
 }

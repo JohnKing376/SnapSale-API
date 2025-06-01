@@ -10,7 +10,7 @@ import OtpToken from '../entities/otp-token.entity';
 import { Repository } from 'typeorm';
 import { UsersService } from '../../users/providers/users.service';
 import { IVerifyToken } from '../interfaces/verify-token.interface';
-import { GetUserData } from '../../auth/interfaces/get-user-data.inteface';
+import { GetUserData } from '../../common/interfaces/get-user-data.inteface';
 import { OtpTokenService } from './otp-token.service';
 
 @Injectable()

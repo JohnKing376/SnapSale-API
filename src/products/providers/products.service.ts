@@ -8,7 +8,7 @@ import { Repository } from 'typeorm';
 import { Product } from '../entities/product.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ICreateProduct } from '../interfaces/create-product.interface';
-import { GetUserData } from '../../auth/interfaces/get-user-data.inteface';
+import { GetUserData } from '../../common/interfaces/get-user-data.inteface';
 import { CreateProductProvider } from './create-product.provider';
 import { UpdateProducts } from '../types/update-products.types';
 import { UpdateProductProvider } from './update-product.provider';

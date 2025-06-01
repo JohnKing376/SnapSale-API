@@ -9,7 +9,7 @@ import { Product } from '../entities/product.entity';
 import { Repository } from 'typeorm';
 import { ICreateProduct } from '../interfaces/create-product.interface';
 import { UsersService } from '../../users/providers/users.service';
-import { GetUserData } from '../../auth/interfaces/get-user-data.inteface';
+import { GetUserData } from '../../common/interfaces/get-user-data.inteface';
 
 @Injectable()
 export class CreateProductProvider {

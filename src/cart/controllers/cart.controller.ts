@@ -7,7 +7,7 @@ import {
   Post,
   Query,
 } from '@nestjs/common';
-import { GetUserData } from '../../auth/interfaces/get-user-data.inteface';
+import { GetUserData } from '../../common/interfaces/get-user-data.inteface';
 import AddCartItemDto from '../dtos/add-cart-item.dto';
 import { CartService } from '../providers/cart.service';
 import { ResponseMeta } from '../../common/decorators/response-meta.decorator';
@@ -16,7 +16,7 @@ import {
   DELETE_RESOURCE_SUCCESSFUL,
   OPERATION_SUCCESSFUL,
   RESOURCE_LIST_FETCHED_SUCCESSFULLY,
-} from '../../common/helpers/messages/custom.messages';
+} from '../../common/utils/helpers/messages/custom.messages';
 import { GetUser } from '../../auth/decorators/get-user.decorator';
 import { PaginationQueryDto } from '../../common/pagination/dtos/pagination-query.dto';
 import DeleteCartItemDto from '../dtos/delete-cart-item.dto';

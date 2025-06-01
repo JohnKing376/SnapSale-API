@@ -16,11 +16,11 @@ import {
 import { ProductsService } from '../providers/products.service';
 import { CreateProductDto } from '../dtos/create-product.dto';
 import { GetUser } from '../../auth/decorators/get-user.decorator';
-import { GetUserData } from '../../auth/interfaces/get-user-data.inteface';
+import { GetUserData } from '../../common/interfaces/get-user-data.inteface';
 import { UpdateProductDto } from '../dtos/update-product.dto';
 import { PaginationQueryDto } from '../../common/pagination/dtos/pagination-query.dto';
 import { ResponseMeta } from '../../common/decorators/response-meta.decorator';
-import { SystemMessages } from '../../common/helpers/messages/system.messages';
+import { SystemMessages } from '../../common/utils/helpers/messages/system.messages';
 import { Role } from '../../auth/decorators/role.decorator';
 import { RoleType } from '../../auth/enums/role-type.enums';
 

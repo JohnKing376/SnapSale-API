@@ -3,7 +3,7 @@ import { CategoryService } from '../providers/category.service';
 import { Auth } from '../../auth/decorators/auth.decorator';
 import { AuthType } from '../../auth/enums/auth-type.enums';
 import { ResponseMeta } from '../../common/decorators/response-meta.decorator';
-import { SystemMessages } from '../../common/helpers/messages/system.messages';
+import { SystemMessages } from '../../common/utils/helpers/messages/system.messages';
 
 @Controller('category')
 export class CategoryController {

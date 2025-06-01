@@ -1,4 +1,4 @@
-import { RoleType } from '../enums/role-type.enums';
+import { RoleType } from '../../auth/enums/role-type.enums';
 
 export interface GetUserData {
   sub: string;

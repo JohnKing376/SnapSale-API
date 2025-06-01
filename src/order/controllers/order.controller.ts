@@ -1,12 +1,12 @@
 import { Controller, Get, HttpStatus } from '@nestjs/common';
 import { OrderService } from '../providers/order.service';
 import { GetUser } from '../../auth/decorators/get-user.decorator';
-import { GetUserData } from '../../auth/interfaces/get-user-data.inteface';
+import { GetUserData } from '../../common/interfaces/get-user-data.inteface';
 import { ResponseMeta } from '../../common/decorators/response-meta.decorator';
 import {
   RESOURCE_FETCHED_SUCCESSFULLY,
   RESOURCE_LIST_FETCHED_SUCCESSFULLY,
-} from '../../common/helpers/messages/custom.messages';
+} from '../../common/utils/helpers/messages/custom.messages';
 
 @Controller('order')
 export class OrderController {

@@ -7,10 +7,10 @@ import {
 import { Job } from 'bullmq';
 import { UsersService } from '../providers/users.service';
 import { Logger, NotFoundException } from '@nestjs/common';
-import { MailService } from '../../mail/providers/mail.service';
+import { MailService } from '../../infrastructure/mail/providers/mail.service';
 import { IMailOptions } from '../interfaces/email-queue.job.interface';
-import { IEmailOptions } from '../../mail/interfaces/send-email.interface';
-import { EmailType } from '../../mail/enums/mail-type.enums';
+import { IEmailOptions } from '../../infrastructure/mail/interfaces/send-email.interface';
+import { EmailType } from '../../infrastructure/mail/enums/mail-type.enums';
 
 @Processor(MAIL)
 export class MailJobProcessor extends WorkerHost {
