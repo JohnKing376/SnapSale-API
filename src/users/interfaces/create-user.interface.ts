@@ -11,4 +11,5 @@ export interface CreateUserOptions {
   profileImg?: string;
   isVerified?: boolean;
   updatedAt?: Date;
+  customerCode?: string;
 }
