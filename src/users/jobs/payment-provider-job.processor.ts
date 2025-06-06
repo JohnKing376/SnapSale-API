@@ -1,6 +1,6 @@
 import { Processor, WorkerHost } from '@nestjs/bullmq';
 import { UsersService } from '../providers/users.service';
-import { PaystackService } from '../../infrastructure/payment-providers/paystack/paystack.service';
+import { PaystackService } from '../../infrastructure/payment/providers/paystack/paystack.service';
 import { Job } from 'bullmq';
 import {
   CREATE_PAYSTACK_CUSTOMER,

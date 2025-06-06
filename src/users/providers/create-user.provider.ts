@@ -26,7 +26,7 @@ import {
   SIGN_UP_SUCCESSFUL_WELCOME_EMAIL,
 } from '../../common/utils/helpers/messages/system.messages';
 import { GenerateTokenProvider } from '../../auth/providers/generate-token.provider';
-import { PaystackService } from '../../infrastructure/payment-providers/paystack/paystack.service';
+import { PaystackService } from '../../infrastructure/payment/providers/paystack/paystack.service';
 import { JobQueue } from '../../infrastructure/queue/interfaces/job.queue.interface';
 
 @Injectable()

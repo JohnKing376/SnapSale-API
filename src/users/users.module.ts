@@ -12,7 +12,7 @@ import { MailJobProcessor } from './jobs/mail-job.processor';
 import { ConfigModule } from '@nestjs/config';
 import jwtConfig from '../auth/config/jwt.config';
 import { JwtModule } from '@nestjs/jwt';
-import { PaystackModule } from '../infrastructure/payment-providers/paystack/paystack.module';
+import { PaystackModule } from '../infrastructure/payment/providers/paystack/paystack.module';
 import { PaymentProviderJobProcessor } from './jobs/payment-provider-job.processor';
 
 @Module({
