@@ -2,7 +2,7 @@ import { Processor, WorkerHost } from '@nestjs/bullmq';
 import { UsersService } from '../../../users/providers/users.service';
 import { MailService } from '../../../infrastructure/mail/providers/mail.service';
 import { Job } from 'bullmq';
-import { IMailOptions } from '../../../users/interfaces/email-queue.job.interface';
+import { MailOptions } from '../../../users/interfaces/mail-queue.job.interface';
 import { Logger, NotFoundException } from '@nestjs/common';
 import { IEmailOptions } from '../../../infrastructure/mail/interfaces/send-email.interface';
 import { EmailType } from '../../../infrastructure/mail/enums/mail-type.enums';
@@ -18,7 +18,7 @@ export class PasswordResetMailProcessor extends WorkerHost {
     super();
   }
   async process(job: Job) {
-    const data = job.data as IMailOptions;
+    const data = job.data as MailOptions;
 
     const user = await this.usersService.findOneById(data.userId);
 

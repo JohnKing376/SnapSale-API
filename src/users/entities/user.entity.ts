@@ -100,4 +100,8 @@ export default class User extends AbstractModel {
 
   @OneToMany(() => Order, (order) => order.user)
   orders: Order[];
+
+  @Exclude()
+  @Column({ nullable: true })
+  customerCode: string;
 }

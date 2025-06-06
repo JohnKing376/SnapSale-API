@@ -23,4 +23,5 @@ export default Joi.object({
   OTP_TOKEN_TTL: Joi.number().required(),
   QUEUE_HOST: Joi.string().required(),
   QUEUE_PORT: Joi.number().required(),
+  PAYSTACK_SECRET: Joi.string().required(),
 });

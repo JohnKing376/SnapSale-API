@@ -3,12 +3,12 @@ import {
   MAIL,
   SEND_EMAIL_VERIFICATION_OTP_JOB,
   WELCOME_MAIL_JOB,
-} from '../constants/user-mail-job.constants';
+} from '../constants/user-job.constants';
 import { Job } from 'bullmq';
 import { UsersService } from '../providers/users.service';
 import { Logger, NotFoundException } from '@nestjs/common';
 import { MailService } from '../../infrastructure/mail/providers/mail.service';
-import { IMailOptions } from '../interfaces/email-queue.job.interface';
+import { MailOptions } from '../interfaces/mail-queue.job.interface';
 import { IEmailOptions } from '../../infrastructure/mail/interfaces/send-email.interface';
 import { EmailType } from '../../infrastructure/mail/enums/mail-type.enums';
 
@@ -24,7 +24,7 @@ export class MailJobProcessor extends WorkerHost {
   async process(job: Job) {
     switch (job.name) {
       case WELCOME_MAIL_JOB: {
-        const data = job.data as IMailOptions;
+        const data = job.data as MailOptions;
         const user = await this.usersService.findOneById(data.userId);
 
         if (!user) {
@@ -50,7 +50,7 @@ export class MailJobProcessor extends WorkerHost {
 
       case SEND_EMAIL_VERIFICATION_OTP_JOB: {
         {
-          const data = job.data as IMailOptions;
+          const data = job.data as MailOptions;
           const user = await this.usersService.findOneById(data.userId);
 
           if (!user) {

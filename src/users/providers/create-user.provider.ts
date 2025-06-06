@@ -13,17 +13,21 @@ import { OtpTokenService } from '../../otp-token/providers/otp-token.service';
 import { Queue } from 'bullmq';
 import { InjectQueue } from '@nestjs/bullmq';
 import {
+  CREATE_PAYSTACK_CUSTOMER,
   MAIL,
+  PAYMENT_PROVIDER,
   SEND_EMAIL_VERIFICATION_OTP_JOB,
   WELCOME_MAIL_JOB,
-} from '../constants/user-mail-job.constants';
+} from '../constants/user-job.constants';
 import { OtpTokenType } from '../../otp-token/enums/otp-token-type.enums';
-import { IMailOptions } from '../interfaces/email-queue.job.interface';
+import { MailOptions } from '../interfaces/mail-queue.job.interface';
 import {
   SIGN_UP_SUCCESSFUL_PROCEED_TO_ACTIVATE_EMAIL,
   SIGN_UP_SUCCESSFUL_WELCOME_EMAIL,
 } from '../../common/utils/helpers/messages/system.messages';
 import { GenerateTokenProvider } from '../../auth/providers/generate-token.provider';
+import { PaystackService } from '../../infrastructure/payment-providers/paystack/paystack.service';
+import { JobQueue } from '../../infrastructure/queue/interfaces/job.queue.interface';
 
 @Injectable()
 export class CreateUserProvider {
@@ -41,10 +45,16 @@ export class CreateUserProvider {
     private readonly hashingProvider: HashingProvider,
 
     /**
-     * Inject Job Queue
+     * Inject Email Job Queue
      */
     @InjectQueue(MAIL)
     private readonly emailQueue: Queue,
+
+    /**
+     *  Inject Payment Provider Queue
+     */
+    @InjectQueue(PAYMENT_PROVIDER)
+    private readonly paymentProviderQueue: Queue,
 
     /**
      * Import OtpTokenService
@@ -54,6 +64,8 @@ export class CreateUserProvider {
      * Import Generate Token Provider
      */
     private readonly generateTokenProvider: GenerateTokenProvider,
+
+    private readonly paystackService: PaystackService,
   ) {}
 
   public async createUser(createUserOptions: CreateUserOptions): Promise<{
@@ -88,16 +100,20 @@ export class CreateUserProvider {
         userId: newUser.id,
       });
 
+      await this.paymentProviderQueue.add(CREATE_PAYSTACK_CUSTOMER, {
+        userId: newUser.id,
+      } satisfies JobQueue);
+
       await this.emailQueue.add(WELCOME_MAIL_JOB, {
         userId: newUser.id,
         subject: SIGN_UP_SUCCESSFUL_WELCOME_EMAIL,
-      } satisfies IMailOptions);
+      } satisfies MailOptions);
 
       await this.emailQueue.add(SEND_EMAIL_VERIFICATION_OTP_JOB, {
         userId: newUser.id,
         subject: SIGN_UP_SUCCESSFUL_PROCEED_TO_ACTIVATE_EMAIL,
         token: otpToken.token,
-      } satisfies IMailOptions);
+      } satisfies MailOptions);
 
       const tokens = await this.generateTokenProvider.generateTokens(newUser);
 
