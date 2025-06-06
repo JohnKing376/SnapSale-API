@@ -11,7 +11,7 @@ import { IChangePassword } from '../interfaces/change-password.interface';
 import { IResetTokenOptions } from '../interfaces/generate-reset-token.interface';
 import { InjectQueue } from '@nestjs/bullmq';
 import { Queue } from 'bullmq';
-import { IMailOptions } from '../../../users/interfaces/email-queue.job.interface';
+import { MailOptions } from '../../../users/interfaces/mail-queue.job.interface';
 import { OtpTokenService } from '../../../otp-token/providers/otp-token.service';
 import { OtpTokenType } from '../../../otp-token/enums/otp-token-type.enums';
 import {
@@ -103,7 +103,7 @@ export class PasswordService {
       userId: user.id,
       token: otpToken.token,
       subject: SEND_RESET_TOKEN_EMAIL,
-    } satisfies IMailOptions);
+    } satisfies MailOptions);
 
     return;
   }
