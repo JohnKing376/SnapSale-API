@@ -95,19 +95,21 @@ export class OrderService {
   /**
    * @description
    * Method to list a pending order for the authenticated user
-   * @param activeUser
+   * @param userIdentifier
    * @returns A promise of Order | null
    */
-  public async listPendingOrder(
-    activeUser: GetUserData,
-  ): Promise<Order | null> {
-    const user = await this.usersService.findUserByIdentifier(activeUser.sub);
+  public async listPendingOrder(userIdentifier: string): Promise<Order | null> {
+    const user = await this.usersService.findUserByIdentifier(userIdentifier);
+
     if (!user) throw new NotFoundException('user not found');
 
     return await this.orderRepository.findOne({
       where: {
         userId: user.id,
         status: 'pending',
+      },
+      relations: {
+        items: true,
       },
     });
   }
