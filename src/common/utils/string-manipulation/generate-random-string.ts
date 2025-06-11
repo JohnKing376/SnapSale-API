@@ -1,4 +1,4 @@
-import randomstring from 'randomstring';
+import * as randomstring from 'randomstring';
 import GenerateRandomStringOptionsInterface from '../../interfaces/generate-random-string.interface';
 
 /***************************************************
