@@ -1,7 +1,6 @@
 import {
   BadRequestException,
   Injectable,
-  InternalServerErrorException,
   NotFoundException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -101,6 +100,8 @@ export class CartService {
       productId: product.id,
       quantity,
     });
+
+    await this.updateTotalPrice(cart.id);
 
     return await this.getCartById(cart.id);
   }
@@ -216,6 +217,13 @@ export class CartService {
         'cart items not found. cannot checkout an empty cart',
       );
     }
+
+    const existingOrder = await this.orderService.listPendingOrder(
+      activeUser.sub,
+    );
+
+    if (existingOrder)
+      throw new BadRequestException('You already have a pending order');
 
     const order = await this.orderService.createOrder(activeUser, { items });
 
