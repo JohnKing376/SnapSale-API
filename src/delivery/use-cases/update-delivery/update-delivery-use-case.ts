@@ -5,7 +5,7 @@ import { DeliveryService } from '../../providers/delivery.service';
 import { UpdateDeliveryCommand } from './update-delivery.command';
 
 @Injectable()
-export default class UpdateDeliveryUseCase {
+export class UpdateDeliveryUseCase {
   constructor(
     private readonly userService: UsersService,
     private readonly orderService: OrderService,
@@ -21,7 +21,7 @@ export default class UpdateDeliveryUseCase {
 
     const order = await this.orderService.listPendingOrder(userIdentifier);
 
-    if (!order) {
+    if (!order || order.userId !== user.id) {
       throw new NotFoundException('order not found');
     }
 

@@ -8,6 +8,7 @@ import { OrderItemService } from './order-item.service';
 import { UsersService } from '../../users/providers/users.service';
 import OrderItem from '../entities/order-item.entity';
 
+//TODO: Clean Up Order-Services, Utilize Use Cases
 @Injectable()
 export class OrderService {
   constructor(
@@ -126,7 +127,7 @@ export class OrderService {
 
   /**
    * @description
-   * Method to get the total of an order by its ID
+   * Method to get the total of orders by its ID
    * @param orderId
    * @returns A promise of void
    */
@@ -149,5 +150,9 @@ export class OrderService {
         total,
       },
     );
+  }
+
+  public async getOrderByIdentifier(identifier: string) {
+    return await this.orderRepository.findOneBy({ identifier });
   }
 }
