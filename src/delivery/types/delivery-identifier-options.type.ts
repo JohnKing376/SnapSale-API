@@ -1,6 +1,6 @@
 type DeliveryIdentifierOptions =
   | {
-      identifierType: 'id' | 'userId';
+      identifierType: 'id' | 'orderId';
       identifier: number;
     }
   | {

@@ -3,6 +3,7 @@ import { AbstractModel } from '../../common/models/abstract-model.entity';
 import { Statuses } from '../enums/statuses.enum';
 import Order from '../../order/entities/order.entity';
 import User from '../../users/entities/user.entity';
+import { Exclude } from 'class-transformer';
 
 @Entity()
 export class Delivery extends AbstractModel {
@@ -27,16 +28,22 @@ export class Delivery extends AbstractModel {
   @Column({ nullable: true })
   deliveryDate: Date;
 
+  @Exclude()
   @Column()
   orderId: number;
 
-  @OneToOne(() => Order)
+  @OneToOne(() => Order, {
+    eager: true,
+  })
   @JoinColumn()
   order: Order;
 
+  @Exclude()
   @Column()
   userId: number;
 
-  @ManyToOne(() => User, (user) => user.delivery)
+  @ManyToOne(() => User, (user) => user.delivery, {
+    eager: true,
+  })
   user: User;
 }

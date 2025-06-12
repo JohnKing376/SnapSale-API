@@ -59,13 +59,13 @@ export class DeliveryService {
   /**
    * @private
    * @description Method to find one delivery by the user's id
-   * @param userId
+   * @param orderId
    * @returns Promise<Delivery | null>
    */
-  private async findOneDeliveryByUserId(
-    userId: number,
+  private async findOneDeliveryByOrderId(
+    orderId: number,
   ): Promise<Delivery | null> {
-    return await this.deliveryRepository.findOneBy({ userId });
+    return await this.deliveryRepository.findOneBy({ orderId });
   }
 
   /**
@@ -130,10 +130,25 @@ export class DeliveryService {
       identifier: async () =>
         await this.findOneDeliveryByIdentifier(String(identifier)),
 
-      userId: async () =>
-        await this.findOneDeliveryByUserId(Number(identifier)),
+      orderId: async () =>
+        await this.findOneDeliveryByOrderId(Number(identifier)),
     };
 
     return await GetDelivery[identifierType]();
   }
+
+  //TODO: DELETE DELIVERY
+
+  // public async deleteDeliveryByIdentifier(identifier: string) {
+  //   const delivery = await this.getDeliveryRecord({
+  //     identifierType: 'identifier',
+  //     identifier: identifier,
+  //   });
+  //
+  //   if (!delivery) {
+  //     throw new NotFoundException('delivery not found');
+  //   }
+  //
+  //   await this.deliveryRepository.delete(delivery.id);
+  // }
 }
