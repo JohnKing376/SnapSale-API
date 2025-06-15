@@ -4,7 +4,7 @@ type DeliveryIdentifierOptions =
       identifier: number;
     }
   | {
-      identifierType: 'identifier';
+      identifierType: 'identifier' | 'trackId';
       identifier: string;
     };
 

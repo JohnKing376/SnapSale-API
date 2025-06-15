@@ -1,11 +1,15 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import generateRandomString from '../../common/utils/string-manipulation/generate-random-string';
-import { Repository } from 'typeorm';
+import { In, Repository } from 'typeorm';
 import { Delivery } from '../entities/delivery.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CreateDeliveryOptionsInterface } from '../interfaces/create-delivery-options.interface';
 import { UpdateDeliveryOptions } from '../types/update-delivery-options.type';
 import DeliveryIdentifierOptions from '../types/delivery-identifier-options.type';
+import { PaginationProvider } from 'src/common/pagination/providers/pagination.provider';
+import { PaginateQuery } from 'src/common/pagination/interfaces/paginate-query.interface';
+import { Pagination } from 'src/common/pagination/interfaces/pagination.interface';
+import { DeliveryFilterOptionsInterface } from '../interfaces/delivery-filter-options.interface';
 
 @Injectable()
 export class DeliveryService {
@@ -15,6 +19,8 @@ export class DeliveryService {
      */
     @InjectRepository(Delivery)
     private readonly deliveryRepository: Repository<Delivery>,
+
+    private readonly paginationProvider: PaginationProvider,
   ) {}
 
   /**
@@ -66,6 +72,20 @@ export class DeliveryService {
     orderId: number,
   ): Promise<Delivery | null> {
     return await this.deliveryRepository.findOneBy({ orderId });
+  }
+
+  /**
+   * @private
+   * @description Method to find a delivery by its tracking identifier
+   * @param identifier
+   * @returns Promise<Delivery | null>
+   */
+  private async findDeliveryByTrackingIdentifier(
+    identifier: string,
+  ): Promise<Delivery | null> {
+    return await this.deliveryRepository.findOneBy({
+      trackingIdentifier: identifier,
+    });
   }
 
   /**
@@ -132,23 +152,72 @@ export class DeliveryService {
 
       orderId: async () =>
         await this.findOneDeliveryByOrderId(Number(identifier)),
+
+      trackId: async () =>
+        await this.findDeliveryByTrackingIdentifier(String(identifier)),
     };
 
     return await GetDelivery[identifierType]();
   }
 
-  //TODO: DELETE DELIVERY
+  /**
+   * @public
+   * @description Method to remove a delivery by its identifier options
+   * @param getDeliveryOptions
+   */
+  public async deleteDeliveryByIdentifier(
+    getDeliveryOptions: DeliveryIdentifierOptions,
+  ) {
+    const delivery = await this.getDeliveryRecord(getDeliveryOptions);
 
-  // public async deleteDeliveryByIdentifier(identifier: string) {
-  //   const delivery = await this.getDeliveryRecord({
-  //     identifierType: 'identifier',
-  //     identifier: identifier,
-  //   });
-  //
-  //   if (!delivery) {
-  //     throw new NotFoundException('delivery not found');
-  //   }
-  //
-  //   await this.deliveryRepository.delete(delivery.id);
-  // }
+    if (!delivery) {
+      throw new NotFoundException('delivery not found');
+    }
+
+    await this.deliveryRepository.delete(delivery.id);
+  }
+
+  /**
+   * @description Method to list all deliveries for an authenticated user
+   * @param deliveryFilterOptions
+   * @param paginateQueryOptions
+   * @returns Promise<Pagination<Delivery>>
+   */
+  public async listAllDeliveries(
+    deliveryFilterOptions: DeliveryFilterOptionsInterface,
+    paginateQueryOptions: PaginateQuery,
+  ): Promise<Pagination<Delivery>> {
+    const { trackingIdentifier, status, userId } = deliveryFilterOptions;
+
+    const filterOptions: Record<string, any> = {};
+
+    if (trackingIdentifier && trackingIdentifier.length > 0) {
+      filterOptions.trackingIdentifier = In(trackingIdentifier);
+    }
+    if (status && status.length > 0) {
+      filterOptions.status = In(status);
+    }
+    if (userId && userId.length > 0) {
+      filterOptions.userId = In(userId);
+    }
+
+    return await this.paginationProvider.paginateQuery(
+      {
+        page: paginateQueryOptions.page,
+        limit: paginateQueryOptions.limit,
+      },
+      this.deliveryRepository,
+      {
+        where: {
+          ...filterOptions,
+        },
+      },
+      {
+        order: {
+          items: true,
+        },
+        user: true,
+      },
+    );
+  }
 }

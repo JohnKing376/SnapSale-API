@@ -19,7 +19,9 @@ export class Delivery extends AbstractModel {
   @Column()
   phoneNumber: string;
 
-  @Column()
+  @Column({
+    unique: true,
+  })
   trackingIdentifier: string;
 
   @Column({ enum: Statuses, default: Statuses.PENDING })
@@ -29,7 +31,9 @@ export class Delivery extends AbstractModel {
   deliveryDate: Date;
 
   @Exclude()
-  @Column()
+  @Column({
+    unique: true
+  })
   orderId: number;
 
   @OneToOne(() => Order, {
