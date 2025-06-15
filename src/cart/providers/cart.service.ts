@@ -1,7 +1,6 @@
 import {
   BadRequestException,
   Injectable,
-  InternalServerErrorException,
   NotFoundException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -102,6 +101,8 @@ export class CartService {
       quantity,
     });
 
+    await this.updateTotalPrice(cart.id);
+
     return await this.getCartById(cart.id);
   }
 
@@ -126,7 +127,7 @@ export class CartService {
       quantity,
     });
 
-    await this.getTotalPrice(cart.id);
+    await this.updateTotalPrice(cart.id);
   }
 
   /**
@@ -137,7 +138,7 @@ export class CartService {
    */
   public async deleteItemsFromCart(authUser: GetUserData) {
     const cart = await this.getOrCreateCart(authUser);
-    await this.getTotalPrice(cart.id);
+    await this.updateTotalPrice(cart.id);
     return await this.cartItemService.removeAllItems(cart.id);
   }
 
@@ -147,7 +148,7 @@ export class CartService {
    * Updates the cart's total price in the database.
    * @param cartId - The cart id.
    */
-  public async getTotalPrice(cartId: number) {
+  public async updateTotalPrice(cartId: number) {
     const cart = await this.getCartById(cartId);
 
     if (!cart) {
@@ -190,6 +191,7 @@ export class CartService {
         limit: paginateQueryOptions.limit,
       },
       this.cartRepository,
+      {},
       {
         userId: user.id,
       },
@@ -217,6 +219,13 @@ export class CartService {
       );
     }
 
+    const existingOrder = await this.orderService.listPendingOrder(
+      activeUser.sub,
+    );
+
+    if (existingOrder)
+      throw new BadRequestException('You already have a pending order');
+
     const order = await this.orderService.createOrder(activeUser, { items });
 
     await this.cartItemService.removeAllItems(cart.id);
@@ -229,9 +238,8 @@ export class CartService {
    * Retrieves a cart by its ID.
    * @param cartId - The ID of the cart to retrieve.
    * @returns A promise that resolves to the cart or null if not found.
-   */  
+   */
   private async getCartById(cartId: number): Promise<Cart | null> {
     return await this.cartRepository.findOneBy({ id: cartId });
   }
-  
 }

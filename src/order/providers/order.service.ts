@@ -8,6 +8,7 @@ import { OrderItemService } from './order-item.service';
 import { UsersService } from '../../users/providers/users.service';
 import OrderItem from '../entities/order-item.entity';
 
+//TODO: Clean Up Order-Services, Utilize Use Cases
 @Injectable()
 export class OrderService {
   constructor(
@@ -95,19 +96,21 @@ export class OrderService {
   /**
    * @description
    * Method to list a pending order for the authenticated user
-   * @param activeUser
+   * @param userIdentifier
    * @returns A promise of Order | null
    */
-  public async listPendingOrder(
-    activeUser: GetUserData,
-  ): Promise<Order | null> {
-    const user = await this.usersService.findUserByIdentifier(activeUser.sub);
+  public async listPendingOrder(userIdentifier: string): Promise<Order | null> {
+    const user = await this.usersService.findUserByIdentifier(userIdentifier);
+
     if (!user) throw new NotFoundException('user not found');
 
     return await this.orderRepository.findOne({
       where: {
         userId: user.id,
         status: 'pending',
+      },
+      relations: {
+        items: true,
       },
     });
   }
@@ -124,7 +127,7 @@ export class OrderService {
 
   /**
    * @description
-   * Method to get the total of an order by its ID
+   * Method to get the total of orders by its ID
    * @param orderId
    * @returns A promise of void
    */
@@ -147,5 +150,9 @@ export class OrderService {
         total,
       },
     );
+  }
+
+  public async getOrderByIdentifier(identifier: string) {
+    return await this.orderRepository.findOneBy({ identifier });
   }
 }

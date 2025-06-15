@@ -1,0 +1,10 @@
+POST http://localhost:3000/delivery/create
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "address": "address",
+  "city": "city",
+  "country": "country",
+  "phoneNumber": "mobile_no"
+}

@@ -12,6 +12,7 @@ import { Exclude } from 'class-transformer';
 import { RoleType } from '../../auth/enums/role-type.enums';
 import Cart from '../../cart/entities/cart.entity';
 import Order from '../../order/entities/order.entity';
+import { Delivery } from '../../delivery/entities/delivery.entity';
 
 @Entity({
   name: 'users',
@@ -104,4 +105,7 @@ export default class User extends AbstractModel {
   @Exclude()
   @Column({ nullable: true })
   customerCode: string;
+
+  @OneToMany(() => Delivery, (delivery) => delivery.user)
+  delivery: Delivery[];
 }

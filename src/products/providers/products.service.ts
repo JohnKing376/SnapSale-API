@@ -164,6 +164,7 @@ export class ProductsService {
         limit: paginateQueryOptions.limit,
       },
       this.productRepository,
+      {},
       { merchantId: authUser.id },
       {
         merchant: true,

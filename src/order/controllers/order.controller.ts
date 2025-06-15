@@ -26,6 +26,6 @@ export class OrderController {
   })
   @Get('list-pending-order')
   public async listPendingOrder(@GetUser() activeUser: GetUserData) {
-    return await this.orderService.listPendingOrder(activeUser);
+    return await this.orderService.listPendingOrder(activeUser.sub);
   }
 }
