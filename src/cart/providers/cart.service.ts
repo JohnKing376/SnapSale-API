@@ -191,6 +191,7 @@ export class CartService {
         limit: paginateQueryOptions.limit,
       },
       this.cartRepository,
+      {},
       {
         userId: user.id,
       },

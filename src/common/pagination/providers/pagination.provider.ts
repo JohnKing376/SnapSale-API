@@ -22,12 +22,16 @@ export class PaginationProvider {
   public async paginateQuery<T extends ObjectLiteral>(
     paginationQuery: PaginationQueryDto,
     repository: Repository<T>,
+    filters?: {
+      where?: FindOptionsWhere<T>;
+    },
     where?: FindOptionsWhere<T>,
     relations?: FindOptionsRelations<T>,
   ): Promise<Pagination<T>> {
     const results = await repository.find({
       where: where || {},
       relations: relations || {},
+      ...filters,
       take: paginationQuery.limit,
       skip: (paginationQuery.page - 1) * paginationQuery.limit,
     });
