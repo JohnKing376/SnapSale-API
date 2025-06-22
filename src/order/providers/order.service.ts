@@ -7,6 +7,7 @@ import { CreateOrder } from '../interfaces/create-order.interface';
 import { OrderItemService } from './order-item.service';
 import { UsersService } from '../../users/providers/users.service';
 import OrderItem from '../entities/order-item.entity';
+import { Statuses } from '../enums/statuses.enum';
 
 //TODO: Clean Up Order-Services, Utilize Use Cases
 @Injectable()
@@ -70,7 +71,7 @@ export class OrderService {
     const order = await this.orderRepository.findOne({
       where: {
         userId: user.id,
-        status: 'pending',
+        status: Statuses.PENDING,
       },
     });
 
@@ -107,7 +108,7 @@ export class OrderService {
     return await this.orderRepository.findOne({
       where: {
         userId: user.id,
-        status: 'pending',
+        status: Statuses.PENDING,
       },
       relations: {
         items: true,
@@ -154,5 +155,21 @@ export class OrderService {
 
   public async getOrderByIdentifier(identifier: string) {
     return await this.orderRepository.findOneBy({ identifier });
+  }
+
+  public async updateOrderStatus(identifier: string, status: Statuses) {
+    const order = await this.getOrderByIdentifier(identifier);
+
+    if (!order) {
+      throw new NotFoundException('order not found');
+    }
+
+    const updateOrder = this.orderRepository.merge(order, {
+      status,
+    });
+
+    await this.orderRepository.save(updateOrder);
+
+    return await this.getOrderById(updateOrder.id);
   }
 }

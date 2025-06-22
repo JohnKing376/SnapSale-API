@@ -1,0 +1,3 @@
+POST http://localhost:3000/payment/order/kgojru5p1iuugsefl208u9xr
+Content-Type: application/json
+Authorization: Bearer {token}

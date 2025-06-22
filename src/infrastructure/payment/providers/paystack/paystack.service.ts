@@ -136,12 +136,15 @@ export class PaystackService {
     | null
   > {
     const httpResponse = await firstValueFrom(
-      this.httpService.get(`${this.baseUrl}/verify/${options.reference}`, {
-        headers: {
-          Authorization: `Bearer ${process.env.PAYSTACK_SECRET}`,
-          'Content-Type': 'application/json',
+      this.httpService.get(
+        `${this.baseUrl}/transaction/verify/${options.reference}`,
+        {
+          headers: {
+            Authorization: `Bearer ${process.env.PAYSTACK_SECRET}`,
+            'Content-Type': 'application/json',
+          },
         },
-      }),
+      ),
     );
 
     if ((httpResponse.status as HttpStatus) !== HttpStatus.OK) {
@@ -158,7 +161,7 @@ export class PaystackService {
       return null;
     }
 
-    const responseData = httpResponse as VerifyTransactionResponse;
+    const responseData = httpResponse.data as VerifyTransactionResponse;
 
     const transactionStatus = responseData.data.status;
 
@@ -180,7 +183,7 @@ export class PaystackService {
         transactionInformation: {
           referenceCode: responseData.data.referenceCode,
           transactionAmount: responseData.data.amount / 100,
-          transactionDate: responseData.data.paid_at.toISOString(),
+          transactionDate: new Date(responseData.data.paid_at).toISOString(),
         },
         customerCode: responseData.data.customer.customer_code,
       };
@@ -204,7 +207,7 @@ export class PaystackService {
         transactionInformation: {
           referenceCode: responseData.data.referenceCode,
           transactionAmount: responseData.data.amount / 100,
-          transactionDate: responseData.data.paid_at.toISOString(),
+          transactionDate: new Date(responseData.data.paid_at).toISOString(),
         },
         customerCode: responseData.data.customer.customer_code,
       };
@@ -216,7 +219,7 @@ export class PaystackService {
       transactionInformation: {
         referenceCode: responseData.data.referenceCode,
         transactionAmount: responseData.data.amount / 100,
-        transactionDate: responseData.data.paid_at.toISOString(),
+        transactionDate: new Date(responseData.data.paid_at).toISOString(),
       },
       customerCode: responseData.data.customer.customer_code,
     };
