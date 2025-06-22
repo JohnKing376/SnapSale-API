@@ -23,6 +23,7 @@ import { CategoryModule } from './category/category.module';
 import { CartModule } from './cart/cart.module';
 import { PaystackModule } from './infrastructure/payment/providers/paystack/paystack.module';
 import { DeliveryModule } from './delivery/delivery.module';
+import { PaymentModule } from './payment/payment.module';
 
 const ENV = process.env.NODE_ENV;
 
@@ -66,6 +67,7 @@ const ENV = process.env.NODE_ENV;
     CartModule,
     PaystackModule,
     DeliveryModule,
+    PaymentModule,
   ],
   controllers: [AppController],
   providers: [
