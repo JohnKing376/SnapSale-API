@@ -3,6 +3,7 @@ import { AbstractModel } from '../../common/models/abstract-model.entity';
 import User from '../../users/entities/user.entity';
 import OrderItem from './order-item.entity';
 import { Exclude } from 'class-transformer';
+import { Statuses } from '../enums/statuses.enum';
 
 @Entity()
 export default class Order extends AbstractModel {
@@ -19,6 +20,6 @@ export default class Order extends AbstractModel {
   @Column({ type: 'decimal', precision: 10, scale: 2, default: 0 })
   total: number;
 
-  @Column({ default: 'pending' })
-  status: string;
+  @Column({ enum: Statuses, default: Statuses.PENDING })
+  status: Statuses;
 }
